@@ -1,0 +1,180 @@
+// Global variable overrides.
+$v-app-loading-text: "Order list loading...";
+
+$v-background-color: #fafafa;
+$v-app-background-color: #e7ebf2;
+$v-panel-background-color: #fff;
+$v-focus-color: #3b5998;
+$v-focus-style: 0 0 1px 1px rgba($v-focus-color, .5);
+$v-border-radius: 3px;
+$v-textfield-border-radius: 0;
+$v-font-family: Helvetica, Arial, 'lucida grande', tahoma, verdana, arial, sans-serif;
+$v-font-size: 11px;
+$v-font-color: #37404E;
+$v-font-weight: 400;
+$v-link-text-decoration: none;
+$v-shadow: 0 1px 0 (v-shade 0.2);
+$v-bevel: inset 0 1px 0 v-tint;
+$v-unit-size: 30px;
+$v-gradient: v-linear 12%;
+$v-overlay-shadow: 0 3px 8px v-shade, 0 0 0 1px (v-shade 0.7);
+$v-shadow-opacity: 20%;
+$v-selection-overlay-padding-horizontal: 0;
+$v-selection-overlay-padding-vertical: 6px;
+$v-selection-item-border-radius: 0;
+$v-select-width:4vw;
+
+@import "../valo/valo.scss";
+
+@mixin mytheme {
+  @include valo;
+  
+  	.v-grid-column-header-content {
+   		 font-size: 11px;
+	}
+  
+  	.v-grid-row.no_calc_row > td {
+   		 background-color: #ff6666;
+	}
+	
+	.v-grid-row.no_noise_calc_row > td {
+   		 background-color: #ffd966;
+	}
+	
+	.v-grid-row.calc_row > td {
+   	 	background-color: #66ff66;
+	}
+	
+	.v-grid-cell {
+		font-size: 11px;
+    	background-color: white;
+    	padding: 2px 2px 2px 2px;
+    	line-height: 20px;
+    	text-overflow: ellipsis;
+	}
+	
+	.v-button {
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		vertical-align: middle;
+		font-size: 32px;
+	}
+	
+	.v-button-selected {
+		background-color: blue;
+		width: 100%;
+		font-weight: bold;
+		text-align: center;
+		vertical-align: middle;
+	}
+	
+	.v-textfield {
+		height: 22px;
+    	padding: 3px 3px;
+	}
+
+	.tytul {
+		font-weight: bold;
+	}
+	
+	.short-btn {
+		height: 22px;
+		margin: 0 0 0 0;
+	}
+	
+	.select-btn {
+		padding: 0 0 0 0;
+		margin: 0 0 0 0;
+		height: 22px;
+	}
+	
+	.text-select {
+		margin: 0 0 0 0;
+	}
+	
+	.v-widget pivot-table {
+	   background-color: #66ff66;
+	   font-size:5px;
+	}
+	.v-widget {
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    white-space: normal;
+    font-size: 11px;
+}
+.pvtAxisContainer, .pvtVals {
+    border: 1px solid gray;
+    background: #EEE;
+    padding: 5px;
+    min-width: 5px;
+    min-height: 20px;
+}
+table.pvtTable tr th {
+    background-color: #e6EEEE;
+    border: 1px solid #CDCDCD;
+    font-size: 0.5vw;
+    padding: 2px;
+}
+.mytheme select {
+	font-size: 0.8vw;
+    font-weight: 400;
+    line-height: inherit;
+    padding: 4px;
+    margin: 0;
+    border-radius: 3px;
+    border: 1px solid #c5c5c5;
+    background-color: #fafafa;
+    background-image: -webkit-linear-gradient(top, #fafafa 2%, #eaeaea 98%);
+    background-image: linear-gradient(to bottom,#fafafa 2%, #eaeaea 98%);
+    color: #464646;
+}
+table.pvtTable {
+    font-family: arial;
+    font-size: 0.5vw;
+    text-align: left;
+    border-collapse: collapse;
+}
+table.pvtTable tr td {
+    color: #3D3D3D;
+    padding: 2px;
+    background-color: #FFF;
+    border: 1px solid #CDCDCD;
+    vertical-align: top;
+    text-align: right;
+}
+.pvtAggregator {
+    width: 5vw;
+    margin-bottom: 5px;
+}
+//Ramki na przedmioty
+.mytheme .pvtAxisContainer, .mytheme .pvtVals {
+    border: 1px solid gray;
+    border-radius: 0.3vw;
+    background: lightblue;
+    padding: 5px;
+    min-width: 5px;
+    min-height: 20px;
+    
+}
+
+.pvtAxisContainer{ 
+background:repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #ccc 10px,
+    #ccc 20px
+  ),linear-gradient(
+    to bottom,
+    #eee,
+    #999
+  );
+	//border-radius: 0.3vw;
+}
+.select {
+	width:4vw;
+}
+}

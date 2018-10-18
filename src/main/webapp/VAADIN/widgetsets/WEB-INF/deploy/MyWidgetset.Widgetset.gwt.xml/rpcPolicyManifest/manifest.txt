@@ -1,0 +1,2 @@
+# Module MyWidgetset.Widgetset.gwt.xml
+# RPC service class, partial path of RPC policy file
