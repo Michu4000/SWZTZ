@@ -1,4 +1,4 @@
-package pl.swztz.portal.Repositories;
+package pl.swztz.portal.repositories;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import pl.swztz.portal.Models.Urlop;
+import pl.swztz.portal.models.Urlop;
 
 public interface UrlopRepository extends JpaRepository<Urlop, Long> {
 

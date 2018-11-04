@@ -98,8 +98,8 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
-		<!--
 		
+		<!--
 		<dependency>
 			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-client-compiler</artifactId>
@@ -112,6 +112,7 @@
         	<version>${vaadin.version}</version>
     	</dependency>
     	-->
+    	
 	</dependencies>
 
 	<dependencyManagement>

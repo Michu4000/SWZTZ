@@ -1,7 +1,8 @@
-package pl.swztz.portal.Repositories;
+package pl.swztz.portal.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.swztz.portal.Models.SalaView;
+
+import pl.swztz.portal.models.SalaView;
 
 public interface SalaViewRepository extends JpaRepository<SalaView, Long> {
 

@@ -1,7 +1,8 @@
-package pl.swztz.portal.Repositories;
+package pl.swztz.portal.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.swztz.portal.Models.InspekcjaView;
+
+import pl.swztz.portal.models.InspekcjaView;
 
 public interface InspekcjaViewRepository extends JpaRepository<InspekcjaView, Long> {
 

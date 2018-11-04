@@ -1,4 +1,4 @@
-package pl.swztz.portal.Models;
+package pl.swztz.portal.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +8,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import java.io.Serializable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.swztz.portal.Repositories.GrupaRepository;
+
+import pl.swztz.portal.repositories.GrupaRepository;
 
 @Entity
 @Table(name="grupa")

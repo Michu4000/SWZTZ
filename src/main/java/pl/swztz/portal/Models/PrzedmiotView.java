@@ -1,4 +1,4 @@
-package pl.swztz.portal.Models;
+package pl.swztz.portal.models;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

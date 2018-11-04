@@ -1,8 +1,9 @@
-package pl.swztz.portal.Repositories;
+package pl.swztz.portal.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.swztz.portal.Models.Prowadzacy;
-import pl.swztz.portal.Models.ProwadzacyView;
+
+import pl.swztz.portal.models.Prowadzacy;
+import pl.swztz.portal.models.ProwadzacyView;
 
 public interface ProwadzacyViewRepository extends JpaRepository<ProwadzacyView, Long> {
 	

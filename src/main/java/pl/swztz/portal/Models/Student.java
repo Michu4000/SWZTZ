@@ -1,4 +1,4 @@
-package pl.swztz.portal.Models;
+package pl.swztz.portal.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.swztz.portal.Repositories.StudentRepository;
+
+import pl.swztz.portal.repositories.StudentRepository;
+
 import java.io.Serializable;
 
 @Entity

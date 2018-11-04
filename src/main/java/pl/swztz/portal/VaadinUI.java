@@ -15,8 +15,29 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
-import pl.swztz.portal.Models.*;
-import pl.swztz.portal.Repositories.*;
+import pl.swztz.portal.models.*;
+import pl.swztz.portal.repositories.*;
+import pl.swztz.windows.OknoAplikacji;
+import pl.swztz.windows.OknoAplikacjiWiadomosc;
+import pl.swztz.windows.OknoElementuAdministrator;
+import pl.swztz.windows.OknoElementuBlad;
+import pl.swztz.windows.OknoElementuDyrektor;
+import pl.swztz.windows.OknoElementuGrupa;
+import pl.swztz.windows.OknoElementuInspekcja;
+import pl.swztz.windows.OknoElementuInstytut;
+import pl.swztz.windows.OknoElementuKonsultacja;
+import pl.swztz.windows.OknoElementuPlanista;
+import pl.swztz.windows.OknoElementuProwadzacy;
+import pl.swztz.windows.OknoElementuPrzedmiot;
+import pl.swztz.windows.OknoElementuSala;
+import pl.swztz.windows.OknoElementuStudent;
+import pl.swztz.windows.OknoElementuUrlop;
+import pl.swztz.windows.OknoElementuWiadomosc;
+import pl.swztz.windows.OknoElementuWniosek;
+import pl.swztz.windows.OknoElementuWydzial;
+import pl.swztz.windows.OknoElementuZajecia;
+import pl.swztz.windows.OknoElementuZapytanie;
+import pl.swztz.windows.OknoPlan;
 
 /**
  * Klasa Frameworka Vaadin

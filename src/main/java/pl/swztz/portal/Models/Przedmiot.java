@@ -1,4 +1,4 @@
-package pl.swztz.portal.Models;
+package pl.swztz.portal.models;
 
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -8,7 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.swztz.portal.Repositories.PrzedmiotRepository;
+
+import pl.swztz.portal.repositories.PrzedmiotRepository;
 
 @Entity
 @Table(name="przedmiot")

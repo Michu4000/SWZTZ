@@ -1,4 +1,4 @@
-package pl.swztz.portal.Models;
+package pl.swztz.portal.models;
 
 import java.io.Serializable;
 import javax.persistence.Column;

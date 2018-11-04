@@ -1,4 +1,4 @@
-package pl.swztz.portal.Models;
+package pl.swztz.portal.models;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
