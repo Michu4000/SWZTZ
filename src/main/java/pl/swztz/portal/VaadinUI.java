@@ -66,7 +66,7 @@ public class VaadinUI extends UI {
 	private Label title;
 	private Button[] buttonApp = new Button[19];
 	private CustomLayout customLayout;
-	private Panel panel1;
+	private Panel panel;
 	private HorizontalLayout layout;
 	private ApplicationWindow appWindow;
 
@@ -187,12 +187,12 @@ public class VaadinUI extends UI {
 			customLayout.addComponent(buttonApp[i], "buttonApp" + i);
 		
 		customLayout.setSizeFull();
-		panel1 = new Panel();
-		panel1.setContent(customLayout);
-		panel1.setSizeUndefined();
+		panel = new Panel();
+		panel.setContent(customLayout);
+		panel.setSizeUndefined();
 
 		layout = new HorizontalLayout();
-		layout.addComponents(panel1);
+		layout.addComponents(panel);
 
 		setContent(layout);
 	}
