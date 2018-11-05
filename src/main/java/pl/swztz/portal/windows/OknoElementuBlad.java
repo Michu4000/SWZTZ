@@ -20,9 +20,9 @@ public class OknoElementuBlad extends OknoElementu {
 	private ComboBox<String[]> user;
 	
 	public OknoElementuBlad(String title, BladRepository repo, boolean windowType) {
-		super(title, repo); // konstruktor klasy bazowej
+		super(title, repo); // constructor of the base class
 		
-		// inicjalizacja elementów formularza
+		// initialize elements of the form
 		textField = new TextField[2];
 		textField[0] = new TextField("Temat");
 		textField[1] = new TextField("Opis");
@@ -35,7 +35,7 @@ public class OknoElementuBlad extends OknoElementu {
 		
 		checkbox = new CheckBox("Rozpatrzono");
 		
-		// inicjalizacja i pobranie danych do ComboBoxa (przepisanie jednej listy do drugiej)
+		// initialize combobox and get data
 		user = new ComboBox<>("Zgłaszający");
 		List<String[]> stringArrayList = new ArrayList<>();
 
@@ -44,22 +44,22 @@ public class OknoElementuBlad extends OknoElementu {
 		}
 
 		user.setItems(stringArrayList);
-		user.setItemCaptionGenerator(x -> x[1]); // ustawia wyswietlanie nazwy użykownika w ComboBoxie
+		user.setItemCaptionGenerator(x -> x[1]); // display user name in combobox
 		
-		form.addComponents(textField[0], textField[1], date, checkbox, user); // dodanie elementów do formularza
+		form.addComponents(textField[0], textField[1], date, checkbox, user); // add elements to form
 		
-		// w zależności od tego czy to okno dodawania czy edycji
+		// depending on whether it's a add window or edit window
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 	
-	// tylko dla okna dodawania
-	private void oknoDodawania() {
+	// only for add window
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		
-		// listener przycisku dodaj
+		// set listener for add button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -68,7 +68,7 @@ public class OknoElementuBlad extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -93,18 +93,18 @@ public class OknoElementuBlad extends OknoElementu {
 		user.clear();
 	}
 	
-	// tylko dla okna edycji
-	private void oknoEdycji() {
+	// only for edit window
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 	
-	// dla okna edycji: ustaw id edytowanego wpisu
+	// for edit window: set id for edited entry
 	@Override
 	public void setElement(Long id) {
 		obj = ((BladRepository)repo).findByIdBlad(id);
 		loadToForm();
 		
-		// listener przycisku wprowadź zmiany
+		// set listener for apply changes button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -122,7 +122,7 @@ public class OknoElementuBlad extends OknoElementu {
 		});
 	}
 	
-	// dla okna edycji: pobierz dane formularza
+	// for edit window: get data to form
 	private void loadToForm() {
 		Object[] objectArray = ((BladRepository)repo).findUser(obj.getIdUzytkownik()).get(0);
 		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
@@ -134,7 +134,7 @@ public class OknoElementuBlad extends OknoElementu {
 		user.setSelectedItem(objString);
 	}
 	
-	// dla okna edycji: aktualizuj wpis w bazie danych
+	// for edit window: update entry in database
 	private void updateObj() {
 		obj.setTemat(textField[0].getValue());
 		obj.setOpis(textField[1].getValue());

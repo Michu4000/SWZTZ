@@ -20,7 +20,7 @@ public class OknoElementuStudent extends OknoElementu {
 	public OknoElementuStudent(String title, StudentRepository repo, boolean windowType) {
 		super(title, repo);
 		
-		// inicjalizacja elementów formularza
+		// initialize elements of the form
 		textField = new TextField[3];
 		textField[0] = new TextField("PESEL");
 		textField[1] = new TextField("Imię");
@@ -34,20 +34,20 @@ public class OknoElementuStudent extends OknoElementu {
 		}
 
 		grupy.setItems(stringArrayList);
-		grupy.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy instytutu w ComboBoxie
+		grupy.setItemCaptionGenerator(x -> x[1]); // set displaying institute name in combobox
 		
 		form.addComponents(textField[0], textField[1], textField[2], grupy);
 		
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 	
-	private void oknoDodawania() {
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		
-		// listener przycisku dodaj
+		// set listener for add button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -56,7 +56,7 @@ public class OknoElementuStudent extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -79,7 +79,7 @@ public class OknoElementuStudent extends OknoElementu {
 		grupy.clear();
 	}
 	
-	private void oknoEdycji() {
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 
@@ -88,7 +88,7 @@ public class OknoElementuStudent extends OknoElementu {
 		obj = ((StudentRepository) repo).findByIdStudent(id);
 		loadToForm();
 		
-		// listener przycisku wprowadź zmiany
+		// set listener for apply changes button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {

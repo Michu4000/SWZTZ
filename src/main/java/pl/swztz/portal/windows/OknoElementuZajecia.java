@@ -26,7 +26,7 @@ public class OknoElementuZajecia extends OknoElementu {
 	public OknoElementuZajecia(String title, JpaRepository repo, boolean windowType) {
 		super(title, repo);
 		
-		// inicjalizacja elementów formularza
+		// initialize elements of the form
 		textField = new TextField("Typ zajęć");
 
 		date = new DateField("Data zajęć");
@@ -79,12 +79,12 @@ public class OknoElementuZajecia extends OknoElementu {
 		form.addComponents(date, nrBloku, sala, przedmiot, textField, prowadzacy, grupy);
 		
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 	
-	private void oknoDodawania() {
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		okButton.addClickListener(new ClickListener() {
 			@Override
@@ -109,7 +109,7 @@ public class OknoElementuZajecia extends OknoElementu {
 						Long.parseLong(przedmiot.getSelectedItem().orElse(null)[0]), textField.getValue(), Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
 		repo.save(newObj);
 		
-		// insert do tabeli ZAJECIA_GRUPY
+		// insert into table ZAJECIA_GRUPY
 		for( String[] gr : grupy.getSelectedItems()) {
 			((ZajeciaRepository)repo).insertZajeciaGrupy(Long.parseLong(gr[0]), newObj.getIdZajecia());
 		}
@@ -127,7 +127,7 @@ public class OknoElementuZajecia extends OknoElementu {
 		grupy.clear();
 	}
 	
-	private void oknoEdycji() {
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 	
@@ -171,8 +171,14 @@ public class OknoElementuZajecia extends OknoElementu {
 		String[] objString3 = new String[] { ""+objectArray3[0], (String)objectArray3[1] };
 		prowadzacy.setSelectedItem(objString3);
 		
-		// załaduj grupy dla danego zajęcia z ZAJECIA_GRUPY i zaznacz w formularzu - coś nie działa, więc tylko deselect
+		// load groups for given class from ZAJECIA_GRUPY table and select in form - something is wrong, only deselect
 		grupy.deselectAll();
+		
+		/*
+		for(Object [] objectArray :  ((ZajeciaRepository)repo).findZajeciaGrupy(obiekt.getIdZajecia())) {
+			grupy.select(new String[] { ""+objectArray[0], (String) objectArray[1] });
+		}
+		*/
 	}
 	
 	private void updateobj()	{
@@ -184,7 +190,7 @@ public class OknoElementuZajecia extends OknoElementu {
 		obj.setIdProwadzacy(Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
 		repo.save(obj);
 		
-		// update na ZAJECIA_GRUPY (najpierw usuń wszystko, a potem inserty)
+		// update on ZAJECIA_GRUPY (delete all and then inserts)
 		((ZajeciaRepository)repo).deleteZajeciaGrupy(obj.getIdZajecia());
 		
 		for( String[] gr : grupy.getSelectedItems()) {

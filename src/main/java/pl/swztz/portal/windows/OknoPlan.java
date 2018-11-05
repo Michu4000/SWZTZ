@@ -10,7 +10,6 @@ import pl.swztz.portal.models.ZajeciaView;
 import pl.swztz.portal.repositories.ZajeciaViewRepository;
 import pl.swztz.portal.utils.Meeting;
 import pl.swztz.portal.utils.MeetingItem;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -41,8 +40,8 @@ public class OknoPlan extends Window {
 
 		lay.addComponent(cal);
 		
-		setResizable(false); // zablokowanie zmiany rozmiaru okienka
-		setDraggable(true); // zablokowanie przesuwania okienka
+		setResizable(false); // block window size change
+		setDraggable(true); // allow window moving
 		setContent(lay);
 		
 		addAllMeetings();

@@ -21,12 +21,12 @@ public class OknoElementuWiadomosc extends OknoElementu {
 	private DateTimeField date;
 	
 	public OknoElementuWiadomosc(String title, WiadomoscRepository repo, boolean windowType) {
-		super(title, repo); // konstruktor klasy bazowej
+		super(title, repo); // constructor of the base class
 		
-		// inicjalizacja elementów formularza
+		// initialize elements of the form
 		textField = new TextField[2];
 		textField[0] = new TextField("Temat");
-		textField[1] = new TextField("sender");
+		textField[1] = new TextField("Nadawca");
 		
 		desc = new TextArea("Treść");
 				
@@ -35,8 +35,8 @@ public class OknoElementuWiadomosc extends OknoElementu {
 		date.setResolution(DateTimeResolution.SECOND);
 		date.setEnabled(false);
 				
-		// inicjalizacja i pobranie danych do ComboBoxa (przepisanie jednej listy do drugiej)
-		recipient = new ComboBox<>("recipient");
+		// initialize combobox and get data
+		recipient = new ComboBox<>("Odbiorca");
 		
 		List<String[]> stringArrayList = new ArrayList<>();
 
@@ -45,21 +45,21 @@ public class OknoElementuWiadomosc extends OknoElementu {
 		}
 
 		recipient.setItems(stringArrayList);
-		recipient.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy użytkownika w ComboBoxie
+		recipient.setItemCaptionGenerator(x -> x[1]); // set displaying user name in combobox
 		
-		form.addComponents(textField[1], recipient, textField[0], desc); // dodanie elementów do formularza
+		form.addComponents(textField[1], recipient, textField[0], desc); // add elements to form
 		
-		// w zależności od tego czy to okno dodawania czy edycji
+		// depending on whether it's a add window or edit window
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 	
-	public void oknoDodawania() {
+	public void addWindow() {
 		okButton.setCaption("Wyślij");
 		
-		// listener przycisku dodaj
+		// set listener for add button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -68,7 +68,7 @@ public class OknoElementuWiadomosc extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -92,7 +92,7 @@ public class OknoElementuWiadomosc extends OknoElementu {
 		desc.clear();
 	}
 	
-	public void oknoEdycji() {
+	public void editWindow() {
 		okButton.setVisible(false);
 		cancelButton.setCaption("Zamknij");
 		

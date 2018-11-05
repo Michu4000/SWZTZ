@@ -41,19 +41,19 @@ public class OknoElementuZapytanie extends OknoElementu {
 		form.addComponents(textField[0], textField[1], prowadzacy, checkbox);
 		
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 
-	private void oknoEdycji() {
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 
-	private void oknoDodawania() {
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		
-		// listener przycisku dodaj
+		// set listener for add button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -62,7 +62,7 @@ public class OknoElementuZapytanie extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -92,7 +92,7 @@ public class OknoElementuZapytanie extends OknoElementu {
 		obj = ((ZapytanieRepository)repo).findByIdZapytanie(id);
 		loadToForm();
 		
-		// listener przycisku wprowadź zmiany
+		// set listener for apply changes button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {

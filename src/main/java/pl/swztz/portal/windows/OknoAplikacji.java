@@ -13,43 +13,43 @@ import com.vaadin.ui.Grid.SelectionMode;
 
 public class OknoAplikacji<T, S> extends Window {
 
-	private VerticalLayout layout = new VerticalLayout(); // główny layout okienka
-	private HorizontalLayout hlayout = new HorizontalLayout(); // layout dla przycisków
+	private VerticalLayout layout = new VerticalLayout(); // main window layout
+	private HorizontalLayout hlayout = new HorizontalLayout(); // layout for buttons
 	protected Grid<T> grid;
 	protected Button editButton = new Button("Edytuj");
 	protected Button addButton = new Button("Dodaj");
 	protected Button deleteButton = new Button("Usuń");
 
-	public OknoAplikacji(String title, JpaRepository viewRepo, JpaRepository tableRepo, Class<T> viewTyp,
-			Class<S> tableTyp, OknoElementu oknoDodawania, OknoElementu oknoEdycji) {
-		super(title); // nazwa okienka
-		this.grid = new Grid<>(viewTyp);
+	public OknoAplikacji(String title, JpaRepository viewRepo, JpaRepository tableRepo, Class<T> viewType,
+			Class<S> tableType, OknoElementu addWindow, OknoElementu editWindow) {
+		super(title); // window title
+		this.grid = new Grid<>(viewType);
 
-		// ustawienie właściwej kolejności kolumn
+		// set correct column order
 		try {
-			Method getFieldNames = viewTyp.getMethod("getFieldNames");
+			Method getFieldNames = viewType.getMethod("getFieldNames");
 			String[] fields = (String[]) getFieldNames.invoke(null);
 			grid.setColumnOrder(fields);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		grid.setSelectionMode(SelectionMode.MULTI); // tryb zaznaczania wielu rekordów
+		grid.setSelectionMode(SelectionMode.MULTI); // multi-selecting mode for grid
 
-		// usunięcie niepotrzebnej kolumny id
+		// delete unwanted id column
 		grid.removeColumn(grid.getColumn("id"));
 
 		hlayout.addComponents(addButton, editButton, deleteButton);
 		layout.addComponents(grid, hlayout);
 
-		// ustawienie listenera przycisku Dodaj
+		// set listener for add button
 		addButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				OknoElementu window = oknoDodawania;
+				OknoElementu window = addWindow;
 				window.addCloseListener(new CloseListener() {
 					public void windowClose(CloseEvent e) {
-						grid.setItems(viewRepo.findAll()); // odśwież widok
+						grid.setItems(viewRepo.findAll()); // refresh grid
 					}
 				});
 				window.setModal(true);
@@ -58,7 +58,7 @@ public class OknoAplikacji<T, S> extends Window {
 			}
 		});
 
-		// ustawienie listenera przycisku Edytuj
+		// set listener for edit button
 		editButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -72,10 +72,10 @@ public class OknoAplikacji<T, S> extends Window {
 							});
 					dialog.getCancelButton().setVisible(false);
 				} else {
-					OknoElementu window = oknoEdycji;
+					OknoElementu window = editWindow;
 					T el = (T) toEdit.toArray()[0];
 					try {
-						Method getId = viewTyp.getMethod("getId");
+						Method getId = viewType.getMethod("getId");
 						Long i = (Long) getId.invoke(el);
 						window.setElement(i);
 					} catch (Exception ex) {
@@ -93,7 +93,7 @@ public class OknoAplikacji<T, S> extends Window {
 			}
 		});
 
-		// ustawienie listenera przycisku Usuń
+		// set listener for delete button
 		deleteButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -115,8 +115,8 @@ public class OknoAplikacji<T, S> extends Window {
 
 										try {
 
-											Method getId = viewTyp.getMethod("getId");
-											Method delById = tableTyp.getMethod("delById", JpaRepository.class,
+											Method getId = viewType.getMethod("getId");
+											Method delById = tableType.getMethod("delById", JpaRepository.class,
 													Long.class);
 
 											for (T u : toDelete) {
@@ -135,14 +135,14 @@ public class OknoAplikacji<T, S> extends Window {
 			}
 		});
 
-		// ustawienie listenera dwukliku na rekordzie tabeli
+		// set listener for double click on the grid
 		grid.addItemClickListener(e -> {
 			if (e.getMouseEventDetails().getType() == 2) {
 				T doEdycji = (T) e.getItem();
 
-				OknoElementu window = oknoEdycji;
+				OknoElementu window = editWindow;
 				try {
-					Method getId = viewTyp.getMethod("getId");
+					Method getId = viewType.getMethod("getId");
 					Long i = (Long) getId.invoke(doEdycji);
 					window.setElement(i);
 				} catch (Exception ex) {
@@ -159,17 +159,17 @@ public class OknoAplikacji<T, S> extends Window {
 			}
 		});
 
-		// pobranie danych z widoku
+		// get data from view to grid
 		grid.setItems(viewRepo.findAll());
 
 		setWidth("60%");
 
-		setResizable(false); // zablokowanie zmiany rozmiaru okienka
-		setDraggable(true); // zablokowanie przesuwania okienka
-		setContent(layout); // ustaw główny layout okienka
+		setResizable(false); // block window size change
+		setDraggable(true); // allow window moving
+		setContent(layout); // set main window layout
 	}
 
-	// funkcja zwraca nazwy kolumn
+	// returns column names
 	public String[] getColumnNames() {
 		List<Column<T, ?>> columns = grid.getColumns();
 		String[] columnNames = new String[columns.size()];
@@ -178,7 +178,7 @@ public class OknoAplikacji<T, S> extends Window {
 		return columnNames;
 	}
 
-	// funkcja zmienia nazwy kolumn
+	// set column names
 	public void changeColumnsNames(String... s) {
 		List<Column<T, ?>> columns = grid.getColumns();
 		for (int i = 0; i < s.length; i++) {
@@ -186,9 +186,9 @@ public class OknoAplikacji<T, S> extends Window {
 		}
 	}
 
-	// funkcja pozwala ustawić wysokośc tabeli na podstawie wysokości ekranu (w pikselach)
+	// set grid's height based on screen's height (in px)
 	public void setResY(int resY) {	grid.setHeight(resY, Unit.PIXELS); }
 
-	// funkcja pozwala ustawić szerokość tabeli na podstawie wysokości ekranu (w pikselach)
+	// set grid's width based on screen's height (in px)
 	public void setResX(int resX) {	grid.setWidth(resX, Unit.PIXELS); }
 }

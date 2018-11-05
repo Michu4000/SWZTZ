@@ -34,12 +34,12 @@ public class OknoElementuPrzedmiot extends OknoElementu {
 		form.addComponents(textField, instytut);
 		
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 
-	private void oknoDodawania()
+	private void addWindow()
 	{
 		okButton.setCaption("Dodaj");
 		okButton.addClickListener(new ClickListener() {
@@ -51,7 +51,7 @@ public class OknoElementuPrzedmiot extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -73,7 +73,7 @@ public class OknoElementuPrzedmiot extends OknoElementu {
 		instytut.clear();
 	}
 	
-	private void oknoEdycji() {
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 	
@@ -90,7 +90,7 @@ public class OknoElementuPrzedmiot extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});

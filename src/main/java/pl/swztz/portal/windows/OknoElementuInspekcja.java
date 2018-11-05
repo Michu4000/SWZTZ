@@ -26,20 +26,20 @@ public class OknoElementuInspekcja extends OknoElementu {
 	private TextField textField;
 	
 	public OknoElementuInspekcja(String title, InspekcjaRepository repo, boolean windowType) {
-		super(title, repo); // konstruktor klasy bazowej
+		super(title, repo); // constructor of the base class
 		
-		// inicjalizacja elementów formularza
+		// initialize elements of the form
 		textField = new TextField("Komentarz");
 		
 		date = new DateField("Data zajęć");
 		date.setDateFormat("dd-MM-yyyy");
 		date.setTextFieldEnabled(false);
 		
-		// dodanie listenera do pola daty
+		// set listener for date field
 		date.addValueChangeListener(new ValueChangeListener() {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				// pobierz bloki zajęć z danej daty
+				// get classes blocks for given date
 				Date datasql = (event.getValue() == null ? null : Date.valueOf((LocalDate) event.getValue()));
 				List<String> bloki = repo.findBloki(datasql);
 				blok.setItems(bloki);
@@ -53,12 +53,12 @@ public class OknoElementuInspekcja extends OknoElementu {
 			}
 		});
 		
-		// inicjalizacja ComboBoxów
+		// initialize comboboxes
 		blok = new ComboBox<>("Nr bloku");
 		blok.setEmptySelectionAllowed(false);
 		blok.setEnabled(false);
 		
-		// dodanie listenera do pola bloku
+		// set listener for class field
 		blok.addValueChangeListener(new ValueChangeListener() {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
@@ -70,7 +70,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 					return;
 				}
 				
-				// pobierz zajęcia z danej daty i nr bloku
+				// get classes for given date and block number
 				List<String[]> stringArrayList = new ArrayList<>();
 				
 				Date datasql = (date.getValue() == null ? null : Date.valueOf((LocalDate) (date.getValue())));
@@ -84,9 +84,9 @@ public class OknoElementuInspekcja extends OknoElementu {
 		});
 		
 		zajecia = new ComboBox<>("Zajęcia");
-		zajecia.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy w ComboBoxie
+		zajecia.setItemCaptionGenerator(x -> x[1]); // set displaying name in combobox
 		zajecia.setEnabled(false);
-		zajecia.setWidth("100%");//
+		zajecia.setWidth("100%");
 		
 		dyrektor = new ComboBox<>("Dyrektor Instytutu");
 		List<String[]> stringArrayList = new ArrayList<>();
@@ -96,22 +96,22 @@ public class OknoElementuInspekcja extends OknoElementu {
 		}
 
 		dyrektor.setItems(stringArrayList);
-		dyrektor.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy w ComboBoxie
+		dyrektor.setItemCaptionGenerator(x -> x[1]); // set displaying name in combobox
 		
-		form.addComponents(date, blok, zajecia, dyrektor, textField); // dodanie elementów do formularza
+		form.addComponents(date, blok, zajecia, dyrektor, textField); // add elements to form
 		
-		// w zależności od tego czy to okno dodawania czy edycji
+		// depending on whether it's a add window or edit window
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 	
-	// tylko dla okna dodawania
-	private void oknoDodawania() {
+	// only for add window
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		
-		// listener przycisku dodaj
+		// set listener for add button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -120,7 +120,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -146,18 +146,18 @@ public class OknoElementuInspekcja extends OknoElementu {
 		textField.clear();
 	}
 	
-	// tylko dla okna edycji
-	private void oknoEdycji() {
+	// only for edit window
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 	
-	// dla okna edycji: ustaw id edytowanego wpisu
+	// for edit window: set id for edited entry
 	@Override
 	public void setElement(Long id) {
 		obj = ((InspekcjaRepository)repo).findByIdInspekcja(id);
 		loadToForm();
 		
-		// listener przycisku wprowadź zmiany
+		// set listener for apply changes button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -175,7 +175,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 		});
 	}
 	
-	// dla okna edycji: pobierz dane formularza
+	// for edit window: get data to form
 	private void loadToForm() {
 		Object[] objectArray1 = ((InspekcjaRepository)repo).findZajecie(obj.getIdZajecia()).get(0);
 		String[] objString1 = new String[] { ""+objectArray1[0], (String)objectArray1[3] };
@@ -190,7 +190,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 		textField.setValue(obj.getKomentarzInspekcja());
 	}
 	
-	// dla okna edycji: aktualizuj wpis w bazie danych
+	// for edit window: update entry in database
 	private void updateObiekt() {
 		obj.setIdZajecia(Long.parseLong(zajecia.getSelectedItem().orElse(null)[0]));
 		obj.setIdDyrektor(Long.parseLong(dyrektor.getSelectedItem().orElse(null)[0]));

@@ -21,7 +21,7 @@ public class OknoElementuGrupa extends OknoElementu {
 	public OknoElementuGrupa(String title, JpaRepository repo, boolean windowType) {
 		super(title, repo);
 		
-		// inicjalizacja elementów formularza
+		// initialize elements of the form
 		textField = new TextField[3];
 		textField[0] = new TextField("Nazwa");
 		textField[1] = new TextField("Kierunek");
@@ -30,12 +30,12 @@ public class OknoElementuGrupa extends OknoElementu {
 		form.addComponents(textField[0], textField[1], textField[2]);
 		
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 	
-	private void oknoDodawania() {
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		okButton.addClickListener(new ClickListener() {
 			@Override
@@ -66,7 +66,7 @@ public class OknoElementuGrupa extends OknoElementu {
 			tf.clear();
 	}
 	
-	private void oknoEdycji() {
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 		
 		starosta = new ComboBox<>("Starosta");

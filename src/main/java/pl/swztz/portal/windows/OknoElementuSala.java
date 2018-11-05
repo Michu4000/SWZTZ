@@ -16,7 +16,7 @@ public class OknoElementuSala extends OknoElementu {
 	public OknoElementuSala(String title, SalaRepository repo, boolean windowType) {
 		super(title, repo);
 		
-		// inicjalizacja elementów formularza
+		// initialize elements of the form
 		textField = new TextField[4];
 		textField[0] = new TextField("Numer Sali");
 		textField[1] = new TextField("Budynek");
@@ -25,17 +25,17 @@ public class OknoElementuSala extends OknoElementu {
 		
 		form.addComponents(textField[0], textField[1], textField[2], textField[3]); // dodanie elementow do formularza
 		
-		 //w zależności od tego czy to okno dodawania czy edycji
+		 // depending on whether it is add window or edit window
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 	
-	private void oknoDodawania() {
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		
-		// listener przycisku dodaj
+		// set listener for add button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -44,7 +44,7 @@ public class OknoElementuSala extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujące okienko z komunikatem o błędzie
+					// pop-up window with error message
 					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Sala", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -65,8 +65,8 @@ public class OknoElementuSala extends OknoElementu {
 			tf.clear();
 	}
 	
-	// tylko dla okna edycji
-	private void oknoEdycji() {
+	// only for edit window
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 	
@@ -75,7 +75,7 @@ public class OknoElementuSala extends OknoElementu {
 		obj = ((SalaRepository)repo).findByIdSala(id);
 		loadToForm();
 		
-		// listener przycisku wprowadź zmiany
+		// set listener for apply changes button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -93,7 +93,7 @@ public class OknoElementuSala extends OknoElementu {
 		});
 	}
 	
-	// dla okna edycji: pobierz dane formularza
+	// for edit window: get data to form
 	private void loadToForm() {
 		textField[0].setValue(obj.getNrSala());
 		textField[1].setValue(obj.getBudynek());
@@ -101,7 +101,7 @@ public class OknoElementuSala extends OknoElementu {
 		textField[3].setValue(Integer.toString(obj.getIloscMiejsc()));
 	}
 		
-	// dla okna edycji: aktualizuj wpis w bazie danych
+	// for edit window: update entry in database
 	private void updateobj() {
 		obj.setNrSala(textField[0].getValue());
 		obj.setBudynek(textField[1].getValue());

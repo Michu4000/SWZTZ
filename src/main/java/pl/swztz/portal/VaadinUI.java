@@ -18,7 +18,7 @@ import pl.swztz.portal.windows.*;
 @Widgetset("MyWidgetset.Widgetset.gwt.xml")
 public class VaadinUI extends UI {
 
-	// repozytoria do tabel sql
+	// repositories for database tables
 	private AdministratorRepository administratorRepo;
 	private BladRepository bladRepo;
 	private DyrektorRepository dyrektorRepo;
@@ -38,7 +38,7 @@ public class VaadinUI extends UI {
 	private ZajeciaRepository zajeciaRepo;
 	private ZapytanieRepository zapytanieRepo;
 
-	// repozytoria do widoków sql
+	// repositories for database views
 	private AdministratorViewRepository administratorViewRepo;
 	private BladViewRepository bladViewRepo;
 	private DyrektorViewRepository dyrektorViewRepo;
@@ -58,17 +58,17 @@ public class VaadinUI extends UI {
 	private ZajeciaViewRepository zajeciaViewRepo;
 	private ZapytanieViewRepository zapytanieViewRepo;
 
-	// rozdzielczość ekranu
+	// screen resolution
 	private static int resX, resY;
 
-	// elementy UI
+	// UI components
 	private Image logo;
 	private Label title;
 	private Button[] buttonApp = new Button[19];
 	private CustomLayout customLayout;
 	private Panel panel1;
 	private HorizontalLayout layout;
-	private OknoAplikacji oknoAplikacji;
+	private OknoAplikacji appWindow;
 
 	@Autowired
 	public VaadinUI(ZapytanieViewRepository zapytanieViewRepo, ZapytanieRepository zapytanieRepo,
@@ -128,17 +128,17 @@ public class VaadinUI extends UI {
 	@Override
 	protected void init(VaadinRequest request) {
 
-		// pobierz rozdzielczość ekranu
+		// get screen resolution
 		resX = (int) UI.getCurrent().getPage().getBrowserWindowWidth();
 		resY = (int) UI.getCurrent().getPage().getBrowserWindowHeight();
 
-		// inicjalizacja elementow UI
+		// initialize UI components
 		initComponents();
 
-		// dodaj komponenty do layoutu i go ustaw
+		// add components to layout and set layout
 		setPageContent();
 
-		// dodaj listenery do przyciskow
+		// add listeners to buttons
 		addListeners();
 
 	}
@@ -204,123 +204,123 @@ public class VaadinUI extends UI {
 		});
 
 		buttonApp[1].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<ZajeciaView, Zajecia>("Lista zajęć", zajeciaViewRepo,
+			appListener(appWindow = new OknoAplikacji<ZajeciaView, Zajecia>("Lista zajęć", zajeciaViewRepo,
 					zajeciaRepo, ZajeciaView.class, Zajecia.class,
 					new OknoElementuZajecia("Dodaj nowy element", zajeciaRepo, true),
 					new OknoElementuZajecia("Edytuj element", zajeciaRepo, false)));
 		});
 
 		buttonApp[2].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<ZapytanieView, Zapytanie>("Zapytania o przełożenie zajęć",
+			appListener(appWindow = new OknoAplikacji<ZapytanieView, Zapytanie>("Zapytania o przełożenie zajęć",
 					zapytanieViewRepo, zapytanieRepo, ZapytanieView.class, Zapytanie.class,
 					new OknoElementuZapytanie("Dodaj nowy element", zapytanieRepo, true, "Zapytanie"),
 					new OknoElementuZapytanie("Edytuj element", zapytanieRepo, false, "Zapytanie")));
 		});
 
 		buttonApp[3].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacjiWiadomosc<WiadomoscView, Wiadomosc>("Wiadomosc",
+			appListener(appWindow = new OknoAplikacjiWiadomosc<WiadomoscView, Wiadomosc>("Wiadomosc",
 					wiadomoscViewRepo, wiadomoscRepo, WiadomoscView.class, Wiadomosc.class,
 					new OknoElementuWiadomosc("Dodaj nowy element", wiadomoscRepo, true),
 					new OknoElementuWiadomosc("Edytuj element", wiadomoscRepo, false)));
 		});
 
 		buttonApp[4].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<KonsultacjaView, Konsultacja>("Konsultacje",
+			appListener(appWindow = new OknoAplikacji<KonsultacjaView, Konsultacja>("Konsultacje",
 					konsultacjaViewRepo, konsultacjaRepo, KonsultacjaView.class, Konsultacja.class,
 					new OknoElementuKonsultacja("Dodaj nowy element", konsultacjaRepo, true),
 					new OknoElementuKonsultacja("Edytuj element", konsultacjaRepo, false)));
 		});
 
 		buttonApp[5].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<WniosekView, Wniosek>("Wnioski o przełożenie zajęć",
+			appListener(appWindow = new OknoAplikacji<WniosekView, Wniosek>("Wnioski o przełożenie zajęć",
 					wniosekViewRepo, wniosekRepo, WniosekView.class, Wniosek.class,
 					new OknoElementuWniosek("Dodaj nowy element", wniosekRepo, true),
 					new OknoElementuWniosek("Edytuj element", wniosekRepo, false)));
 		});
 
 		buttonApp[6].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<UrlopView, Urlop>("Urlopy", urlopViewRepo, urlopRepo,
+			appListener(appWindow = new OknoAplikacji<UrlopView, Urlop>("Urlopy", urlopViewRepo, urlopRepo,
 					UrlopView.class, Urlop.class, new OknoElementuUrlop("Dodaj nowy element", urlopRepo, true),
 					new OknoElementuUrlop("Edytuj element", urlopRepo, false)));
 		});
 
 		buttonApp[7].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<InspekcjaView, Inspekcja>("Inspekcje", inspekcjaViewRepo,
+			appListener(appWindow = new OknoAplikacji<InspekcjaView, Inspekcja>("Inspekcje", inspekcjaViewRepo,
 					inspekcjaRepo, InspekcjaView.class, Inspekcja.class,
 					new OknoElementuInspekcja("Dodaj nowy element", inspekcjaRepo, true),
 					new OknoElementuInspekcja("Edytuj element", inspekcjaRepo, false)));
 		});
 
 		buttonApp[8].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<SalaView, Sala>("Sale", salaViewRepo, salaRepo,
+			appListener(appWindow = new OknoAplikacji<SalaView, Sala>("Sale", salaViewRepo, salaRepo,
 					SalaView.class, Sala.class, new OknoElementuSala("Dodaj nowy element", salaRepo, true),
 					new OknoElementuSala("Edytuj element", salaRepo, false)));
 		});
 
 		buttonApp[9].addClickListener(e -> {
 			appListener(
-					oknoAplikacji = new OknoAplikacji<GrupaView, Grupa>("Grupy studenckie", grupaViewRepo, grupaRepo,
+					appWindow = new OknoAplikacji<GrupaView, Grupa>("Grupy studenckie", grupaViewRepo, grupaRepo,
 							GrupaView.class, Grupa.class, new OknoElementuGrupa("Dodaj nowy element", grupaRepo, true),
 							new OknoElementuGrupa("Edytuj element", grupaRepo, false)));
 		});
 
 		buttonApp[10].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<StudentView, Student>("Studenci", studentViewRepo,
+			appListener(appWindow = new OknoAplikacji<StudentView, Student>("Studenci", studentViewRepo,
 					studentRepo, StudentView.class, Student.class,
 					new OknoElementuStudent("Dodaj nowy element", studentRepo, true),
 					new OknoElementuStudent("Edytuj element", studentRepo, false)));
 		});
 
 		buttonApp[11].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<ProwadzacyView, Prowadzacy>("Prowadzący zajęcia",
+			appListener(appWindow = new OknoAplikacji<ProwadzacyView, Prowadzacy>("Prowadzący zajęcia",
 					prowadzacyViewRepo, prowadzacyRepo, ProwadzacyView.class, Prowadzacy.class,
 					new OknoElementuProwadzacy("Dodaj nowy element", prowadzacyRepo, true),
 					new OknoElementuProwadzacy("Edytuj element", prowadzacyRepo, false)));
 		});
 
 		buttonApp[12].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<InstytutView, Instytut>("Instytuty", instytutViewRepo,
+			appListener(appWindow = new OknoAplikacji<InstytutView, Instytut>("Instytuty", instytutViewRepo,
 					instytutRepo, InstytutView.class, Instytut.class,
 					new OknoElementuInstytut("Dodaj nowy element", instytutRepo, true),
 					new OknoElementuInstytut("Edytuj element", instytutRepo, false)));
 		});
 
 		buttonApp[13].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<DyrektorView, Dyrektor>("Dyrektorzy instytutów",
+			appListener(appWindow = new OknoAplikacji<DyrektorView, Dyrektor>("Dyrektorzy instytutów",
 					dyrektorViewRepo, dyrektorRepo, DyrektorView.class, Dyrektor.class,
 					new OknoElementuDyrektor("Dodaj nowy element", dyrektorRepo, true),
 					new OknoElementuDyrektor("Edytuj element", dyrektorRepo, false)));
 		});
 
 		buttonApp[14].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<PlanistaView, Planista>("Planiści", planistaViewRepo,
+			appListener(appWindow = new OknoAplikacji<PlanistaView, Planista>("Planiści", planistaViewRepo,
 					planistaRepo, PlanistaView.class, Planista.class,
 					new OknoElementuPlanista("Dodaj nowy element", planistaRepo, true),
 					new OknoElementuPlanista("Edytuj element", planistaRepo, false)));
 		});
 
 		buttonApp[15].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<AdministratorView, Administrator>("Administratorzy",
+			appListener(appWindow = new OknoAplikacji<AdministratorView, Administrator>("Administratorzy",
 					administratorViewRepo, administratorRepo, AdministratorView.class, Administrator.class,
 					new OknoElementuAdministrator("Dodaj nowy element", administratorRepo, true),
 					new OknoElementuAdministrator("Edytuj element", administratorRepo, false)));
 		});
 
 		buttonApp[16].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<BladView, Blad>("Błędy", bladViewRepo, bladRepo,
+			appListener(appWindow = new OknoAplikacji<BladView, Blad>("Błędy", bladViewRepo, bladRepo,
 					BladView.class, Blad.class, new OknoElementuBlad("Dodaj nowy element", bladRepo, true),
 					new OknoElementuBlad("Edytuj element", bladRepo, false)));
 		});
 
 		buttonApp[17].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<WydzialView, Wydzial>("Wydziały", wydzialViewRepo,
+			appListener(appWindow = new OknoAplikacji<WydzialView, Wydzial>("Wydziały", wydzialViewRepo,
 					wydzialRepo, WydzialView.class, Wydzial.class,
 					new OknoElementuWydzial("Dodaj nowy element", wydzialRepo, true),
 					new OknoElementuWydzial("Edytuj element", wydzialRepo, false)));
 		});
 
 		buttonApp[18].addClickListener(e -> {
-			appListener(oknoAplikacji = new OknoAplikacji<PrzedmiotView, Przedmiot>("Przedmioty", przedmiotViewRepo,
+			appListener(appWindow = new OknoAplikacji<PrzedmiotView, Przedmiot>("Przedmioty", przedmiotViewRepo,
 					przedmiotRepo, PrzedmiotView.class, Przedmiot.class,
 					new OknoElementuPrzedmiot("Dodaj nowy element", przedmiotRepo, true),
 					new OknoElementuPrzedmiot("Edytuj element", przedmiotRepo, false)));
@@ -328,20 +328,20 @@ public class VaadinUI extends UI {
 
 	}
 
-	private void appListener(OknoAplikacji oknoApki) {
+	private void appListener(OknoAplikacji window) {
 		
 		lockButtons();
 		
-		// nowe okno
-		oknoAplikacji = oknoApki;
-		oknoAplikacji.setPosition((int) (getResX() * 0.2 + 10), 123);
-		addWindow(oknoAplikacji);
-		oknoAplikacji.setResY((int) (VaadinUI.getResY() * 0.45));
-		oknoAplikacji.setResX((int) (VaadinUI.getResX() * 0.6));
+		// new window
+		appWindow = window;
+		appWindow.setPosition((int) (getResX() * 0.2 + 10), 123);
+		addWindow(appWindow);
+		appWindow.setResY((int) (VaadinUI.getResY() * 0.45));
+		appWindow.setResX((int) (VaadinUI.getResX() * 0.6));
 
-		oknoAplikacji.addCloseListener(new CloseListener() {
+		appWindow.addCloseListener(new CloseListener() {
 			public void windowClose(CloseEvent e) {
-				oknoAplikacji = null;
+				appWindow = null;
 				unlockButtons();
 			}
 		});
@@ -357,10 +357,9 @@ public class VaadinUI extends UI {
 			buttonApp[i].setEnabled(false);
 	}
 
-
-	// funkcja zwraca szerokość ekranu w pikselach
+	// get screen width (in px)
 	public static int getResX() { return resX; }
 
-	// funkcja zwraca wysokość ekranu w pikselach
+	// get screen height (in px)
 	public static int getResY() { return resY; }
 }

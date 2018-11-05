@@ -49,12 +49,12 @@ public class OknoElementuWniosek extends OknoElementu {
 	  form.addComponents(prowadzacy, dyrektor, textField, decyzja, czyZmieniono);
 	  
 	  if(windowType)
-		  oknoDodawania();
+		  addWindow();
 	  else
-		  oknoEdycji();
+		  editWindow();
 	}
 
-	private void oknoDodawania() {
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		
 		okButton.addClickListener(new ClickListener() {
@@ -92,7 +92,7 @@ public class OknoElementuWniosek extends OknoElementu {
 		czyZmieniono.clear();
 	}
 	
-	private void oknoEdycji() {
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 	

@@ -21,12 +21,12 @@ public class OknoElementuWydzial extends OknoElementu {
 		form.addComponents(textField);
 		
 		if(windowType)
-			oknoDodawania();
+			addWindow();
 		else
-			oknoEdycji();
+			editWindow();
 	}
 
-	private void oknoDodawania() {
+	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		okButton.addClickListener(new ClickListener() {
 			@Override
@@ -56,7 +56,7 @@ public class OknoElementuWydzial extends OknoElementu {
 		textField.clear();
 	}
 	
-	private void oknoEdycji() {
+	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
 	

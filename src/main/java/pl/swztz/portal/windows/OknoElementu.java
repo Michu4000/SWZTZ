@@ -15,13 +15,13 @@ public abstract class OknoElementu extends Window {
 	protected Button cancelButton = new Button("Anuluj");
 	
 	public OknoElementu(String title, JpaRepository repo) {
-		super(title); // nazwa okienka
+		super(title); // window title
 		this.repo = repo;
 	
 		hlayout.addComponents(okButton, cancelButton);
 		layout.addComponents(form, hlayout);
 		
-		// listener przycisku anuluj
+		// set listener for cancel button
 		cancelButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -31,9 +31,9 @@ public abstract class OknoElementu extends Window {
 
 		setWidth("50%");
 		
-		setResizable(false); // zablokowanie zmiany rozmiaru okienka
-		setDraggable(true); // zablokowanie przesuwania okienka
-		setContent(layout); // ustaw główny layout okienka
+		setResizable(false); // block window size change
+		setDraggable(true); // allow window moving
+		setContent(layout); // set main window layout
 	}
 	
 	public abstract void setElement(Long id);
