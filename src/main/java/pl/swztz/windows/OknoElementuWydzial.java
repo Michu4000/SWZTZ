@@ -6,89 +6,88 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-
 import pl.swztz.portal.models.Wydzial;
 import pl.swztz.portal.repositories.WydzialRepository;
 
 public class OknoElementuWydzial extends OknoElementu {
 
-	private Wydzial obiekt;
-	private TextField tf;
+	private Wydzial obj;
+	private TextField textField;
 	
-	public OknoElementuWydzial(String nazwa, JpaRepository repo, boolean typOkna) {
-		super(nazwa, repo);
-		tf = new TextField("Nazwa");
+	public OknoElementuWydzial(String title, JpaRepository repo, boolean windowType) {
+		super(title, repo);
+		textField = new TextField("Nazwa");
 		
-		form.addComponents(tf);
+		form.addComponents(textField);
 		
-		if(typOkna)
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
 	}
 
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
-		ok.addClickListener(new ClickListener() {
+		okButton.setCaption("Dodaj");
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf.isEmpty()) {
+				if(!textField.isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						@Override
 						public void onClose(ConfirmDialog arg0) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
 	}
 	
 	private void addNew() {
-		Wydzial w = new Wydzial(tf.getValue());
-		repo.save(w);
+		Wydzial newObj = new Wydzial(textField.getValue());
+		repo.save(newObj);
 		clearForm();
 	}
 	
 	private void clearForm() {
-		tf.clear();
+		textField.clear();
 	}
 	
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 	
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((WydzialRepository)repo).findByIdWydzial(id);
+		obj = ((WydzialRepository)repo).findByIdWydzial(id);
 		loadToForm();
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf.isEmpty()) {
-					updateObiekt();
+				if(!textField.isEmpty()) {
+					updateobj();
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						@Override
 						public void onClose(ConfirmDialog arg0) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
 	}
 	
 	private void loadToForm() {
-		tf.setValue(obiekt.getNazwaWydzial());
+		textField.setValue(obj.getNazwaWydzial());
 	}
 	
-	private void updateObiekt() {
-		obiekt.setNazwaWydzial(tf.getValue());
-		repo.save(obiekt);
+	private void updateobj() {
+		obj.setNazwaWydzial(textField.getValue());
+		repo.save(obj);
 	}
 }

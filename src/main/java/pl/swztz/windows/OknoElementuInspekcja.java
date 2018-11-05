@@ -18,18 +18,18 @@ import com.vaadin.ui.Button.ClickListener;
 
 public class OknoElementuInspekcja extends OknoElementu {
 	
-	private Inspekcja obiekt;
+	private Inspekcja obj;
 	private DateField date;
 	private ComboBox<String> blok;
 	private ComboBox<String[]> zajecia;
 	private ComboBox<String[]> dyrektor;
-	private TextField tf;
+	private TextField textField;
 	
-	public OknoElementuInspekcja(String nazwa, InspekcjaRepository repo, boolean typOkna) {
-		super(nazwa, repo); // konstruktor klasy bazowej
+	public OknoElementuInspekcja(String title, InspekcjaRepository repo, boolean windowType) {
+		super(title, repo); // konstruktor klasy bazowej
 		
-		// inicjalizacja elementow formularza
-		tf = new TextField("Komentarz");
+		// inicjalizacja elementów formularza
+		textField = new TextField("Komentarz");
 		
 		date = new DateField("Data zajęć");
 		date.setDateFormat("dd-MM-yyyy");
@@ -39,7 +39,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 		date.addValueChangeListener(new ValueChangeListener() {
 			@Override
 			public void valueChange(ValueChangeEvent event) {
-				// pobierz bloki zajec z danej daty
+				// pobierz bloki zajęć z danej daty
 				Date datasql = (event.getValue() == null ? null : Date.valueOf((LocalDate) event.getValue()));
 				List<String> bloki = repo.findBloki(datasql);
 				blok.setItems(bloki);
@@ -53,7 +53,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 			}
 		});
 		
-		// inicjalizacja ComboBoxow
+		// inicjalizacja ComboBoxów
 		blok = new ComboBox<>("Nr bloku");
 		blok.setEmptySelectionAllowed(false);
 		blok.setEnabled(false);
@@ -70,7 +70,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 					return;
 				}
 				
-				// pobierz zajecia z danej daty i nr bloku
+				// pobierz zajęcia z danej daty i nr bloku
 				List<String[]> stringArrayList = new ArrayList<>();
 				
 				Date datasql = (date.getValue() == null ? null : Date.valueOf((LocalDate) (date.getValue())));
@@ -84,7 +84,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 		});
 		
 		zajecia = new ComboBox<>("Zajęcia");
-		zajecia.setItemCaptionGenerator(x -> x[1]); // ustawia wyswietlanie nazwy w ComboBoxie
+		zajecia.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy w ComboBoxie
 		zajecia.setEnabled(false);
 		zajecia.setWidth("100%");//
 		
@@ -96,12 +96,12 @@ public class OknoElementuInspekcja extends OknoElementu {
 		}
 
 		dyrektor.setItems(stringArrayList);
-		dyrektor.setItemCaptionGenerator(x -> x[1]); // ustawia wyswietlanie nazwy w ComboBoxie
+		dyrektor.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy w ComboBoxie
 		
-		form.addComponents(date, blok, zajecia, dyrektor, tf); // dodanie elementow do formularza
+		form.addComponents(date, blok, zajecia, dyrektor, textField); // dodanie elementów do formularza
 		
-		// w zaleznosci od tego czy to okno dodawania czy edycji
-		if(typOkna)
+		// w zależności od tego czy to okno dodawania czy edycji
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
@@ -109,22 +109,22 @@ public class OknoElementuInspekcja extends OknoElementu {
 	
 	// tylko dla okna dodawania
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
+		okButton.setCaption("Dodaj");
 		
 		// listener przycisku dodaj
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!zajecia.isEmpty() && !dyrektor.isEmpty() && !tf.isEmpty()) {
+				if(!zajecia.isEmpty() && !dyrektor.isEmpty() && !textField.isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					// wyskakujące okienko z komunikatem o błędzie
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -133,8 +133,8 @@ public class OknoElementuInspekcja extends OknoElementu {
 	private void addNew() {
 		Long idZajecia = Long.parseLong(zajecia.getSelectedItem().orElse(null)[0]);
 		Long idDyrektor = Long.parseLong(dyrektor.getSelectedItem().orElse(null)[0]);
-		Inspekcja i = new Inspekcja(idZajecia, idDyrektor, tf.getValue());
-		repo.save(i);
+		Inspekcja newObj = new Inspekcja(idZajecia, idDyrektor, textField.getValue());
+		repo.save(newObj);
 		clearForm();
 	}
 	
@@ -143,33 +143,33 @@ public class OknoElementuInspekcja extends OknoElementu {
 		blok.clear();
 		zajecia.clear();
 		dyrektor.clear();
-		tf.clear();
+		textField.clear();
 	}
 	
 	// tylko dla okna edycji
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 	
 	// dla okna edycji: ustaw id edytowanego wpisu
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((InspekcjaRepository)repo).findByIdInspekcja(id);
+		obj = ((InspekcjaRepository)repo).findByIdInspekcja(id);
 		loadToForm();
 		
-		// listener przycisku wprowadz zmiany
-		ok.addClickListener(new ClickListener() {
+		// listener przycisku wprowadź zmiany
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!zajecia.isEmpty() && !dyrektor.isEmpty() && !tf.isEmpty()) {
+				if(!zajecia.isEmpty() && !dyrektor.isEmpty() && !textField.isEmpty()) {
 					updateObiekt(); 
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -177,24 +177,24 @@ public class OknoElementuInspekcja extends OknoElementu {
 	
 	// dla okna edycji: pobierz dane formularza
 	private void loadToForm() {
-		Object[] objectArray1 = ((InspekcjaRepository)repo).findZajecie(obiekt.getIdZajecia()).get(0);
-		String[] sobiekt1 = new String[] { ""+objectArray1[0], (String)objectArray1[3] };
+		Object[] objectArray1 = ((InspekcjaRepository)repo).findZajecie(obj.getIdZajecia()).get(0);
+		String[] objString1 = new String[] { ""+objectArray1[0], (String)objectArray1[3] };
 		
-		Object[] objectArray2 = ((InspekcjaRepository)repo).findDyrektor(obiekt.getIdDyrektor()).get(0);
-		String[] sobiekt2 = new String[] { ""+objectArray2[0], (String)objectArray2[1] };
+		Object[] objectArray2 = ((InspekcjaRepository)repo).findDyrektor(obj.getIdDyrektor()).get(0);
+		String[] objString2 = new String[] { ""+objectArray2[0], (String)objectArray2[1] };
 		
 		date.setValue( ((Date)objectArray1[1]).toLocalDate() );
 		blok.setValue(""+objectArray1[2]);
-		zajecia.setSelectedItem(sobiekt1);
-		dyrektor.setSelectedItem(sobiekt2);
-		tf.setValue(obiekt.getKomentarzInspekcja());
+		zajecia.setSelectedItem(objString1);
+		dyrektor.setSelectedItem(objString2);
+		textField.setValue(obj.getKomentarzInspekcja());
 	}
 	
 	// dla okna edycji: aktualizuj wpis w bazie danych
 	private void updateObiekt() {
-		obiekt.setIdZajecia(Long.parseLong(zajecia.getSelectedItem().orElse(null)[0]));
-		obiekt.setIdDyrektor(Long.parseLong(dyrektor.getSelectedItem().orElse(null)[0]));
-		obiekt.setKomentarzInspekcja(tf.getValue());
-		repo.save(obiekt);
+		obj.setIdZajecia(Long.parseLong(zajecia.getSelectedItem().orElse(null)[0]));
+		obj.setIdDyrektor(Long.parseLong(dyrektor.getSelectedItem().orElse(null)[0]));
+		obj.setKomentarzInspekcja(textField.getValue());
+		repo.save(obj);
 	}
 }

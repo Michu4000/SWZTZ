@@ -11,28 +11,27 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-
 import pl.swztz.portal.models.Zajecia;
 import pl.swztz.portal.repositories.ZajeciaRepository;
 
 public class OknoElementuZajecia extends OknoElementu {
 
-	private Zajecia obiekt;
-	private TextField tf;
-	private DateField data;
+	private Zajecia obj;
+	private TextField textField;
+	private DateField date;
 	private ComboBox<Long> nrBloku;
 	private ComboBox<String[]> sala, przedmiot, prowadzacy;
 	private ComboBoxMultiselect<String[]> grupy;
 	
-	public OknoElementuZajecia(String nazwa, JpaRepository repo, boolean typOkna) {
-		super(nazwa, repo);
+	public OknoElementuZajecia(String title, JpaRepository repo, boolean windowType) {
+		super(title, repo);
 		
-		//inicjalizacja elementow formularza
-		tf = new TextField("Typ zajęć");
+		// inicjalizacja elementów formularza
+		textField = new TextField("Typ zajęć");
 
-		data = new DateField("Data zajęć");
-		data.setDateFormat("dd-MM-yyyy");
-		data.setTextFieldEnabled(false);
+		date = new DateField("Data zajęć");
+		date.setDateFormat("dd-MM-yyyy");
+		date.setTextFieldEnabled(false);
 		
 		nrBloku = new ComboBox<>("Numer Bloku");
 		nrBloku.setItems(1L, 2L, 3L, 4L, 5L, 6L, 7L);
@@ -77,123 +76,119 @@ public class OknoElementuZajecia extends OknoElementu {
 		grupy.setItems(stringArrayList4);
 		grupy.setItemCaptionGenerator(x -> x[1]);
 		
-		form.addComponents(data, nrBloku, sala, przedmiot, tf, prowadzacy, grupy);
+		form.addComponents(date, nrBloku, sala, przedmiot, textField, prowadzacy, grupy);
 		
-		if(typOkna)
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
 	}
 	
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
-		ok.addClickListener(new ClickListener() {
+		okButton.setCaption("Dodaj");
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!data.isEmpty() && !nrBloku.isEmpty() && !sala.isEmpty() && !przedmiot.isEmpty() && !tf.isEmpty() && !prowadzacy.isEmpty() && !grupy.isEmpty()) {
+				if(!date.isEmpty() && !nrBloku.isEmpty() && !sala.isEmpty() && !przedmiot.isEmpty() && !textField.isEmpty() && !prowadzacy.isEmpty() && !grupy.isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						@Override
 						public void onClose(ConfirmDialog arg0) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
 	}
 
 	private void addNew() {
-		Zajecia z = new Zajecia(data.getValue(), nrBloku.getValue(), Long.parseLong(sala.getSelectedItem().orElse(null)[0]),
-						Long.parseLong(przedmiot.getSelectedItem().orElse(null)[0]), tf.getValue(), Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
-		repo.save(z);
+		Zajecia newObj = new Zajecia(date.getValue(), nrBloku.getValue(), Long.parseLong(sala.getSelectedItem().orElse(null)[0]),
+						Long.parseLong(przedmiot.getSelectedItem().orElse(null)[0]), textField.getValue(), Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
+		repo.save(newObj);
 		
 		// insert do tabeli ZAJECIA_GRUPY
 		for( String[] gr : grupy.getSelectedItems()) {
-			((ZajeciaRepository)repo).insertZajeciaGrupy(Long.parseLong(gr[0]), z.getIdZajecia());
+			((ZajeciaRepository)repo).insertZajeciaGrupy(Long.parseLong(gr[0]), newObj.getIdZajecia());
 		}
 		
 		clearForm();
 	}
 	
 	private void clearForm() {
-		data.clear();
+		date.clear();
 		nrBloku.clear();
 		sala.clear();
 		przedmiot.clear();
-		tf.clear();
+		textField.clear();
 		prowadzacy.clear();
 		grupy.clear();
 	}
 	
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 	
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((ZajeciaRepository)repo).findByIdZajecia(id);
+		obj = ((ZajeciaRepository)repo).findByIdZajecia(id);
 		loadToForm();
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!data.isEmpty() && !nrBloku.isEmpty() && !sala.isEmpty() && !przedmiot.isEmpty() && !tf.isEmpty() && !prowadzacy.isEmpty() && !grupy.isEmpty()) {
-					updateObiekt();
+				if(!date.isEmpty() && !nrBloku.isEmpty() && !sala.isEmpty() && !przedmiot.isEmpty() && !textField.isEmpty() && !prowadzacy.isEmpty() && !grupy.isEmpty()) {
+					updateobj();
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						@Override
 						public void onClose(ConfirmDialog arg0) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
 	}
 	
 	private void loadToForm() {
-		data.setValue(obiekt.getData());
-		nrBloku.setValue(obiekt.getNrBloku());
+		date.setValue(obj.getData());
+		nrBloku.setValue(obj.getNrBloku());
 		
-		Object[] objectArray1 = ((ZajeciaRepository) repo).findSala(obiekt.getIdSala()).get(0);
-		String[] sobiekt1 = new String[] { ""+objectArray1[0], (String)objectArray1[1] };
-		sala.setSelectedItem(sobiekt1);
+		Object[] objectArray1 = ((ZajeciaRepository) repo).findSala(obj.getIdSala()).get(0);
+		String[] objString1 = new String[] { ""+objectArray1[0], (String)objectArray1[1] };
+		sala.setSelectedItem(objString1);
 		
-		Object[] objectArray2 = ((ZajeciaRepository) repo).findPrzedmiot(obiekt.getIdPrzedmiot()).get(0);
-		String[] sobiekt2 = new String[] { ""+objectArray2[0], (String)objectArray2[1] };
-		przedmiot.setSelectedItem(sobiekt2);
+		Object[] objectArray2 = ((ZajeciaRepository) repo).findPrzedmiot(obj.getIdPrzedmiot()).get(0);
+		String[] objString2 = new String[] { ""+objectArray2[0], (String)objectArray2[1] };
+		przedmiot.setSelectedItem(objString2);
 		
-		tf.setValue(obiekt.getTypZajec());
+		textField.setValue(obj.getTypZajec());
 		
-		Object[] objectArray3 = ((ZajeciaRepository) repo).findProwadzacy(obiekt.getIdProwadzacy()).get(0);
-		String[] sobiekt3 = new String[] { ""+objectArray3[0], (String)objectArray3[1] };
-		prowadzacy.setSelectedItem(sobiekt3);
+		Object[] objectArray3 = ((ZajeciaRepository) repo).findProwadzacy(obj.getIdProwadzacy()).get(0);
+		String[] objString3 = new String[] { ""+objectArray3[0], (String)objectArray3[1] };
+		prowadzacy.setSelectedItem(objString3);
 		
-		// zaladuj grupy dla danego zajecia z ZAJECIA_GRUPY i zaznacz w formularzu - cos nie dziala, wiec tylko deselect
+		// załaduj grupy dla danego zajęcia z ZAJECIA_GRUPY i zaznacz w formularzu - coś nie działa, więc tylko deselect
 		grupy.deselectAll();
-		
-		/*for(Object [] objectArray :  ((ZajeciaRepository)repo).findZajeciaGrupy(obiekt.getIdZajecia())) {
-			grupy.select(new String[] { ""+objectArray[0], (String) objectArray[1] });
-		}*/
 	}
 	
-	private void updateObiekt()	{
-		obiekt.setData(data.getValue());
-		obiekt.setNrBloku(nrBloku.getValue());
-		obiekt.setIdSala(Long.parseLong(sala.getSelectedItem().orElse(null)[0]));
-		obiekt.setIdPrzedmiot(Long.parseLong(przedmiot.getSelectedItem().orElse(null)[0]));
-		obiekt.setTypZajec(tf.getValue());
-		obiekt.setIdProwadzacy(Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
-		repo.save(obiekt);
+	private void updateobj()	{
+		obj.setData(date.getValue());
+		obj.setNrBloku(nrBloku.getValue());
+		obj.setIdSala(Long.parseLong(sala.getSelectedItem().orElse(null)[0]));
+		obj.setIdPrzedmiot(Long.parseLong(przedmiot.getSelectedItem().orElse(null)[0]));
+		obj.setTypZajec(textField.getValue());
+		obj.setIdProwadzacy(Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
+		repo.save(obj);
 		
-		// update na ZAJECIA_GRUPY (najpierw usuwamy wszystko, a potem robimy inserty)
-		((ZajeciaRepository)repo).deleteZajeciaGrupy(obiekt.getIdZajecia());
+		// update na ZAJECIA_GRUPY (najpierw usuń wszystko, a potem inserty)
+		((ZajeciaRepository)repo).deleteZajeciaGrupy(obj.getIdZajecia());
 		
 		for( String[] gr : grupy.getSelectedItems()) {
-			((ZajeciaRepository)repo).insertZajeciaGrupy(Long.parseLong(gr[0]), obiekt.getIdZajecia());
+			((ZajeciaRepository)repo).insertZajeciaGrupy(Long.parseLong(gr[0]), obj.getIdZajecia());
 		}
 	}
 }

@@ -8,7 +8,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import java.io.Serializable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import pl.swztz.portal.repositories.WydzialRepository;
 
 @Entity

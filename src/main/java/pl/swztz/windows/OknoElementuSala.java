@@ -5,46 +5,46 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-
 import pl.swztz.portal.models.Sala;
 import pl.swztz.portal.repositories.SalaRepository;
 
 public class OknoElementuSala extends OknoElementu {
 
-	private Sala obiekt;
-	private TextField tf[];
+	private Sala obj;
+	private TextField textField[];
 		
-	public OknoElementuSala(String nazwa, SalaRepository repo, boolean typOkna) {
-		super(nazwa, repo);
-		// inicjalizacja elementow formularza
-		tf = new TextField[4];
-		tf[0] = new TextField("Numer Sali");
-		tf[1] = new TextField("Budynek");
-		tf[2] = new TextField("Typ Sali");
-		tf[3] = new TextField("Liczba miejsc");
+	public OknoElementuSala(String title, SalaRepository repo, boolean windowType) {
+		super(title, repo);
 		
-		form.addComponents(tf[0], tf[1], tf[2], tf[3]); // dodanie elementow do formularza
+		// inicjalizacja elementów formularza
+		textField = new TextField[4];
+		textField[0] = new TextField("Numer Sali");
+		textField[1] = new TextField("Budynek");
+		textField[2] = new TextField("Typ Sali");
+		textField[3] = new TextField("Liczba miejsc");
 		
-		 //w zaleznosci od tego czy to okno dodawania czy edycji
-		if(typOkna)
+		form.addComponents(textField[0], textField[1], textField[2], textField[3]); // dodanie elementow do formularza
+		
+		 //w zależności od tego czy to okno dodawania czy edycji
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
 	}
 	
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
+		okButton.setCaption("Dodaj");
 		
 		// listener przycisku dodaj
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf[0].isEmpty() && !tf[1].isEmpty() && !tf[2].isEmpty() && !tf[3].isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !textField[3].isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
+					// wyskakujące okienko z komunikatem o błędzie
 					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Sala", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
@@ -55,39 +55,39 @@ public class OknoElementuSala extends OknoElementu {
 	}
 	
 	private void addNew() {
-		Sala s = new Sala(tf[0].getValue(), tf[1].getValue(), tf[2].getValue(), Integer.parseInt(tf[3].getValue()));
-		repo.save(s);
+		Sala newObj = new Sala(textField[0].getValue(), textField[1].getValue(), textField[2].getValue(), Integer.parseInt(textField[3].getValue()));
+		repo.save(newObj);
 		clearForm();
 	}
 	
 	private void clearForm() {
-		for (TextField t : tf)
-			t.clear();
+		for (TextField tf : textField)
+			tf.clear();
 	}
 	
 	// tylko dla okna edycji
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 	
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((SalaRepository)repo).findByIdSala(id);
+		obj = ((SalaRepository)repo).findByIdSala(id);
 		loadToForm();
 		
-		// listener przycisku wprowadz zmiany
-		ok.addClickListener(new ClickListener() {
+		// listener przycisku wprowadź zmiany
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf[0].isEmpty() && !tf[1].isEmpty() && !tf[2].isEmpty() && !tf[3].isEmpty()) {
-					updateObiekt(); 
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !textField[3].isEmpty()) {
+					updateobj(); 
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Sala", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Sala", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -95,18 +95,18 @@ public class OknoElementuSala extends OknoElementu {
 	
 	// dla okna edycji: pobierz dane formularza
 	private void loadToForm() {
-		tf[0].setValue(obiekt.getNrSala());
-		tf[1].setValue(obiekt.getBudynek());
-		tf[2].setValue(obiekt.getTypSala());
-		tf[3].setValue(Integer.toString(obiekt.getIloscMiejsc()));
+		textField[0].setValue(obj.getNrSala());
+		textField[1].setValue(obj.getBudynek());
+		textField[2].setValue(obj.getTypSala());
+		textField[3].setValue(Integer.toString(obj.getIloscMiejsc()));
 	}
 		
 	// dla okna edycji: aktualizuj wpis w bazie danych
-	private void updateObiekt() {
-		obiekt.setNrSala(tf[0].getValue());
-		obiekt.setBudynek(tf[1].getValue());
-		obiekt.setTypSala(tf[2].getValue());
-		obiekt.setIloscMiejsc(Integer.parseInt(tf[3].getValue()));
-		repo.save(obiekt);
+	private void updateobj() {
+		obj.setNrSala(textField[0].getValue());
+		obj.setBudynek(textField[1].getValue());
+		obj.setTypSala(textField[2].getValue());
+		obj.setIloscMiejsc(Integer.parseInt(textField[3].getValue()));
+		repo.save(obj);
 	}
 }

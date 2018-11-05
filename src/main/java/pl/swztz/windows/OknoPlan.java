@@ -6,13 +6,10 @@ import org.vaadin.addon.calendar.item.BasicItemProvider;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-
 import pl.swztz.portal.models.ZajeciaView;
 import pl.swztz.portal.repositories.ZajeciaViewRepository;
 import pl.swztz.utils.Meeting;
 import pl.swztz.utils.MeetingItem;
-import pl.swztz.utils.Meeting.State;
-
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -29,8 +26,6 @@ public class OknoPlan extends Window {
 		this.zajeciaRepo = zajeciaRepo;
 		
 		Calendar<MeetingItem> cal = new Calendar(eventProvider);
-		//cal.setWidth("900px");
-		//cal.setHeight("450px");
 		
 		cal.addStyleName("meetings");
 		cal.setWidth(100.0f, Unit.PERCENTAGE);
@@ -42,14 +37,8 @@ public class OknoPlan extends Window {
 		
 		cal.setLocale(new Locale("pl", "PL"));
 		cal.withMonth(ZonedDateTime.now().getMonth());
-		
-		
-		//cal.setSizeFull();//
+
 		lay.addComponent(cal);
-		//lay.setSizeFull();//
-		
-		//setWidth("60%");
-		//setHeight("60%");
 		
 		setResizable(false); // zablokowanie zmiany rozmiaru okienka
 		setDraggable(true); // zablokowanie przesuwania okienka
@@ -59,10 +48,9 @@ public class OknoPlan extends Window {
 	}
 	
 	private void addAllMeetings() {
-		//addMeeting(ZonedDateTime.parse("2018-01-13T10:30:40+01:00[GMT+01:00]"), ZonedDateTime.parse("2018-01-13T12:30:40+01:00[GMT+01:00]"), "opis");
 		
 		for(ZajeciaView z : zajeciaRepo.findAll()){
-			String opis = z.getNazwaPrzedmiot() + " (" + z.getTypZajec() + ")<br>" + z.getSala() + "; " + z.getGrupy() + "; " + z.getProwadzacy();
+			String desc = z.getNazwaPrzedmiot() + " (" + z.getTypZajec() + ")<br>" + z.getSala() + "; " + z.getGrupy() + "; " + z.getProwadzacy();
 			
 			LocalTime time1, time2;
 			
@@ -101,20 +89,19 @@ public class OknoPlan extends Window {
 				break;
 			}
 			
-			ZonedDateTime pocz = ZonedDateTime.of(LocalDateTime.of(z.getData(), time1), ZoneId.of("Europe/Warsaw"));
-			ZonedDateTime kon = ZonedDateTime.of(LocalDateTime.of(z.getData(), time2), ZoneId.of("Europe/Warsaw"));
+			ZonedDateTime start = ZonedDateTime.of(LocalDateTime.of(z.getData(), time1), ZoneId.of("Europe/Warsaw"));
+			ZonedDateTime end = ZonedDateTime.of(LocalDateTime.of(z.getData(), time2), ZoneId.of("Europe/Warsaw"));
 			
-			addMeeting(pocz, kon, opis);
+			addMeeting(start, end, desc);
 		}
 	}
 	
-	private void addMeeting(ZonedDateTime pocz, ZonedDateTime kon, String tresc) {
+	private void addMeeting(ZonedDateTime start, ZonedDateTime end, String desc) {
 
         Meeting meeting = new Meeting(false);
-        meeting.setStart(pocz);
-        meeting.setEnd(kon);
-        //meeting.setDetails("A Detail<br>with HTML<br> with more lines");
-        meeting.setDetails(tresc);
+        meeting.setStart(start);
+        meeting.setEnd(end);
+        meeting.setDetails(desc);
         meeting.setState(Meeting.State.planned);
 
         eventProvider.addItem(new MeetingItem(meeting));

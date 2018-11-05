@@ -6,120 +6,119 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-
 import pl.swztz.portal.models.Prowadzacy;
 import pl.swztz.portal.repositories.ProwadzacyRepository;
 
 public class OknoElementuProwadzacy extends OknoElementu {
 	
-	private Prowadzacy obiekt;
-	private TextField tf[];
+	private Prowadzacy obj;
+	private TextField textField[];
 
-	public OknoElementuProwadzacy(String nazwa, JpaRepository repo, boolean typOkna) {
-		super(nazwa, repo);
+	public OknoElementuProwadzacy(String title, JpaRepository repo, boolean windowType) {
+		super(title, repo);
 		
-		// inicjalizacja elementow formularza
-		tf = new TextField[5];
-		tf[0] = new TextField("PESEL");
-		tf[1] = new TextField("Stopień");
-		tf[2] = new TextField("Imię");
-		tf[3] = new TextField("Nazwisko");
-		tf[4] = new TextField("Pokój");
+		// inicjalizacja elementów formularza
+		textField = new TextField[5];
+		textField[0] = new TextField("PESEL");
+		textField[1] = new TextField("Stopień");
+		textField[2] = new TextField("Imię");
+		textField[3] = new TextField("Nazwisko");
+		textField[4] = new TextField("Pokój");
 		
-		form.addComponents(tf[0], tf[1], tf[2], tf[3], tf[4]); // dodanie elementow do formularza
+		form.addComponents(textField[0], textField[1], textField[2], textField[3], textField[4]); // dodanie elementów do formularza
 		
-		// w zaleznosci od tego czy to okno dodawania czy edycji
-		if(typOkna)
+		// w zależności od tego czy to okno dodawania czy edycji
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
 	}
 	
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
+		okButton.setCaption("Dodaj");
 		
 		// listener przycisku dodaj
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf[0].isEmpty() && !tf[1].isEmpty() && !tf[2].isEmpty() && !tf[3].isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !textField[3].isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					// wyskakujące okienko z komunikatem o błędzie
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
 	}
 	
 	private void addNew() {
-		Prowadzacy p = new Prowadzacy(Long.parseLong(tf[0].getValue()), tf[1].getValue(), tf[2].getValue(), tf[3].getValue(), tf[4].getValue());
-		repo.save(p);
+		Prowadzacy newObj = new Prowadzacy(Long.parseLong(textField[0].getValue()), textField[1].getValue(), textField[2].getValue(), textField[3].getValue(), textField[4].getValue());
+		repo.save(newObj);
 		clearForm();
 	}
 	
 	private void clearForm() {
-		for (TextField t : tf)
-			t.clear();
+		for (TextField tf : textField)
+			tf.clear();
 	}
 	
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((ProwadzacyRepository)repo).findByIdProwadzacy(id);
+		obj = ((ProwadzacyRepository)repo).findByIdProwadzacy(id);
 		loadToForm();
 		
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf[0].isEmpty() && !tf[1].isEmpty() && !tf[2].isEmpty() && !tf[3].isEmpty()) {
-					updateObiekt();
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !textField[3].isEmpty()) {
+					updateobj();
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					// wyskakujące okienko z komunikatem o błędzie
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
 	}
 	
 	private void loadToForm() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(obiekt.getPESEL());
-		tf[0].setValue(sb.toString());
-		tf[1].setValue(obiekt.getStopien());
-		tf[2].setValue(obiekt.getImie());
-		tf[3].setValue(obiekt.getNazwisko());
+		StringBuilder stringBuild = new StringBuilder();
+		stringBuild.append(obj.getPESEL());
+		textField[0].setValue(stringBuild.toString());
+		textField[1].setValue(obj.getStopien());
+		textField[2].setValue(obj.getImie());
+		textField[3].setValue(obj.getNazwisko());
 		
-		if(obiekt.getPokoj() != null)
-			tf[4].setValue(obiekt.getPokoj());
+		if(obj.getPokoj() != null)
+			textField[4].setValue(obj.getPokoj());
 		else
-			tf[4].setValue("");
+			textField[4].setValue("");
 	}
 	
-	private void updateObiekt() {
-		obiekt.setPESEL(Long.parseLong(tf[0].getValue()));
-		obiekt.setStopien(tf[1].getValue());
-		obiekt.setImie(tf[2].getValue());
-		obiekt.setNazwisko(tf[3].getValue());
+	private void updateobj() {
+		obj.setPESEL(Long.parseLong(textField[0].getValue()));
+		obj.setStopien(textField[1].getValue());
+		obj.setImie(textField[2].getValue());
+		obj.setNazwisko(textField[3].getValue());
 		
-		if(!tf[4].isEmpty())
-			obiekt.setPokoj(tf[4].getValue());
+		if(!textField[4].isEmpty())
+			obj.setPokoj(textField[4].getValue());
 		else
-			obiekt.setPokoj("");
+			obj.setPokoj("");
 			
-		repo.save(obiekt);
+		repo.save(obj);
 	}
 }

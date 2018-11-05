@@ -8,24 +8,23 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-
 import pl.swztz.portal.models.Instytut;
 import pl.swztz.portal.repositories.InstytutRepository;
 import pl.swztz.windows.OknoElementu;
 
 public class OknoElementuInstytut extends OknoElementu {
 
-	private Instytut obiekt;	
+	private Instytut obj;	
 	private ComboBox<String[]> wydzial;
 	private TextField nazwaInstytut;
 	
-	public OknoElementuInstytut(String nazwa, InstytutRepository repo, boolean typOkna) {
-		super(nazwa, repo); //konstruktor klasy bazowej
+	public OknoElementuInstytut(String title, InstytutRepository repo, boolean windowType) {
+		super(title, repo); // konstruktor klasy bazowej
 
-		// inicjalizacja elementow formularza
+		// inicjalizacja elementów formularza
 		nazwaInstytut= new TextField("Nazwa Instytutu");
 		
-		// inicjalizacja i pobranie danych do ComboBoxa (musialem przepisac jedna liste do drugiej)
+		// inicjalizacja i pobranie danych do ComboBoxa (przepisanie jednej listy do drugiej)
 		wydzial = new ComboBox<>("Wydział");
 		List<String[]> stringArrayList = new ArrayList<>();
 
@@ -34,12 +33,12 @@ public class OknoElementuInstytut extends OknoElementu {
 		}
 
 		wydzial.setItems(stringArrayList);
-		wydzial.setItemCaptionGenerator(x -> x[1]); // ustawia wyswietlanie nazwy uzytkownika w ComboBoxie
+		wydzial.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy użytkownika w ComboBoxie
 
-		form.addComponents(nazwaInstytut, wydzial); // dodanie elementow do formularza 
+		form.addComponents(nazwaInstytut, wydzial); // dodanie elementów do formularza 
 		
-		// w zaleznosci od tego czy to okno dodawania czy edycji
-		if(typOkna)
+		// w zależności od tego czy to okno dodawania czy edycji
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
@@ -47,10 +46,10 @@ public class OknoElementuInstytut extends OknoElementu {
 	
 	// tylko dla okna dodawania
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
+		okButton.setCaption("Dodaj");
 		
 		// listener przycisku dodaj
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if(!nazwaInstytut.isEmpty() && !wydzial.isEmpty()) {
@@ -58,11 +57,11 @@ public class OknoElementuInstytut extends OknoElementu {
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					// wyskakujące okienko z komunikatem o błędzie
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -70,8 +69,8 @@ public class OknoElementuInstytut extends OknoElementu {
 	
 	private void addNew() {
 		Long idWydzial = Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]);
-		Instytut i = new Instytut(nazwaInstytut.getValue(), idWydzial);
-		repo.save(i);
+		Instytut newObj = new Instytut(nazwaInstytut.getValue(), idWydzial);
+		repo.save(newObj);
 		clearForm();
 	}
 	
@@ -82,17 +81,17 @@ public class OknoElementuInstytut extends OknoElementu {
 	
 	// tylko dla okna edycji
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 	
 	// dla okna edycji: ustaw id edytowanego wpisu
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((InstytutRepository)repo).findByIdInstytut(id);
+		obj = ((InstytutRepository)repo).findByIdInstytut(id);
 		loadToForm();
 		
-		// listener przycisku wprowadz zmiany
-		ok.addClickListener(new ClickListener() {
+		// listener przycisku wprowadź zmiany
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				if(!wydzial.isEmpty() &&   !nazwaInstytut.isEmpty()) {
@@ -100,10 +99,10 @@ public class OknoElementuInstytut extends OknoElementu {
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -111,18 +110,18 @@ public class OknoElementuInstytut extends OknoElementu {
 	
 	// dla okna edycji: pobierz dane formularza
 	private void loadToForm() {
-		Object[] objectArray = ((InstytutRepository)repo).findWydzial(obiekt.getIdWydzial()).get(0);
-		String[] sobiekt = new String[] { ""+objectArray[0], (String)objectArray[1] };
+		Object[] objectArray = ((InstytutRepository)repo).findWydzial(obj.getIdWydzial()).get(0);
+		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
 		
-		nazwaInstytut.setValue(obiekt.getNazwaInstytut());
-		wydzial.setSelectedItem(sobiekt);
+		nazwaInstytut.setValue(obj.getNazwaInstytut());
+		wydzial.setSelectedItem(objString);
 	}
 	
 	// dla okna edycji: aktualizuj wpis w bazie danych
 	private void updateObiekt() {
-		obiekt.setNazwaInstytut(nazwaInstytut.getValue());
-		obiekt.setIdWydzial(Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]));
+		obj.setNazwaInstytut(nazwaInstytut.getValue());
+		obj.setIdWydzial(Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]));
 		
-		repo.save(obiekt);
+		repo.save(obj);
 	}
 }

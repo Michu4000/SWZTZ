@@ -9,33 +9,32 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-
 import pl.swztz.portal.models.Urlop;
 import pl.swztz.portal.repositories.UrlopRepository;
 import pl.swztz.windows.OknoElementu;
 
 public class OknoElementuUrlop extends OknoElementu {
 
-	private Urlop obiekt;
-	private DateField dataRozpoczecia, dataZakonczenia;
+	private Urlop obj;
+	private DateField startDate, endDate;
 	private ComboBox<String[]> prowadzacy;
-	private TextField powod;
+	private TextField textField;
 		
-	public OknoElementuUrlop(String nazwa, UrlopRepository repo, boolean typOkna) {
-		super(nazwa, repo); //konstruktor klasy bazowej
+	public OknoElementuUrlop(String title, UrlopRepository repo, boolean windowType) {
+		super(title, repo); // konstruktor klasy bazowej
 
-		// inicjalizacja elementow formularza
-		powod = new TextField("Powód");
+		// inicjalizacja elementów formularza
+		textField = new TextField("Powód");
 			
-		dataRozpoczecia = new DateField("Data rozpoczecia");
-		dataRozpoczecia.setDateFormat("dd-MM-yyyy");
-		dataRozpoczecia.setTextFieldEnabled(false);
+		startDate = new DateField("Data rozpoczecia");
+		startDate.setDateFormat("dd-MM-yyyy");
+		startDate.setTextFieldEnabled(false);
 		
-		dataZakonczenia = new DateField("Data zakończenia");
-		dataZakonczenia.setDateFormat("dd-MM-yyyy");
-		dataZakonczenia.setTextFieldEnabled(false);
+		endDate = new DateField("Data zakończenia");
+		endDate.setDateFormat("dd-MM-yyyy");
+		endDate.setTextFieldEnabled(false);
 		
-		// inicjalizacja i pobranie danych do ComboBoxa (musialem przepisac jedna liste do drugiej)
+		// inicjalizacja i pobranie danych do ComboBoxa (przepisanie jednej listy do drugiej)
 		prowadzacy = new ComboBox<>("Prowadzacy");
 		List<String[]> stringArrayList = new ArrayList<>();
 
@@ -44,12 +43,12 @@ public class OknoElementuUrlop extends OknoElementu {
 		}
 
 		prowadzacy.setItems(stringArrayList);
-		prowadzacy.setItemCaptionGenerator(x -> x[1]); // ustawia wyswietlanie nazwy uzytkownika w ComboBoxie
+		prowadzacy.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy użytkownika w ComboBoxie
 
-		form.addComponents(prowadzacy, dataRozpoczecia, dataZakonczenia, powod); // dodanie elementow do formularza 
+		form.addComponents(prowadzacy, startDate, endDate, textField); // dodanie elementów do formularza 
 		
-		// w zaleznosci od tego czy to okno dodawania czy edycji
-		if(typOkna)
+		// w zależności od tego czy to okno dodawania czy edycji
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
@@ -57,22 +56,22 @@ public class OknoElementuUrlop extends OknoElementu {
 	
 	// tylko dla okna dodawania
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
+		okButton.setCaption("Dodaj");
 		
 		// listener przycisku dodaj
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!powod.isEmpty() && !dataRozpoczecia.isEmpty() && !dataZakonczenia.isEmpty() &&  !prowadzacy.isEmpty()) {
+				if(!textField.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty() &&  !prowadzacy.isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					// wyskakujące okienko z komunikatem o błędzie
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -80,42 +79,42 @@ public class OknoElementuUrlop extends OknoElementu {
 	
 	private void addNew() {
 		Long idProwadzacy = Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]);
-		Urlop u = new Urlop(idProwadzacy, dataRozpoczecia.getValue(), dataZakonczenia.getValue(), powod.getValue());
-		repo.save(u);
+		Urlop newObj = new Urlop(idProwadzacy, startDate.getValue(), endDate.getValue(), textField.getValue());
+		repo.save(newObj);
 		clearForm();
 	}
 	
 	private void clearForm() {
-		powod.clear();
+		textField.clear();
 		prowadzacy.clear();
-		dataRozpoczecia.clear();
-		dataZakonczenia.clear();
+		startDate.clear();
+		endDate.clear();
 	}
 	
 	// tylko dla okna edycji
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 	
 	// dla okna edycji: ustaw id edytowanego wpisu
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((UrlopRepository)repo).findByIdUrlop(id);
+		obj = ((UrlopRepository)repo).findByIdUrlop(id);
 		loadToForm();
 		
-		// listener przycisku wprowadz zmiany
-		ok.addClickListener(new ClickListener() {
+		// listener przycisku wprowadź zmiany
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!prowadzacy.isEmpty() && !dataRozpoczecia.isEmpty() && !dataZakonczenia.isEmpty() && !powod.isEmpty()) {
-					updateObiekt(); 
+				if(!prowadzacy.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty() && !textField.isEmpty()) {
+					updateobj(); 
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -123,21 +122,21 @@ public class OknoElementuUrlop extends OknoElementu {
 	
 	// dla okna edycji: pobierz dane formularza
 	private void loadToForm() {
-		Object[] objectArray = ((UrlopRepository)repo).findProwadzacy(obiekt.getIdProwadzacy()).get(0);
-		String[] sobiekt = new String[] { ""+objectArray[0], (String)objectArray[1] };
+		Object[] objectArray = ((UrlopRepository)repo).findProwadzacy(obj.getIdProwadzacy()).get(0);
+		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
 		
-		dataRozpoczecia.setValue(obiekt.getDataRozpoczecia());
-		dataZakonczenia.setValue(obiekt.getDataZakonczenia());
-		powod.setValue(obiekt.getPowod());
-		prowadzacy.setSelectedItem(sobiekt);
+		startDate.setValue(obj.getDataRozpoczecia());
+		endDate.setValue(obj.getDataZakonczenia());
+		textField.setValue(obj.getPowod());
+		prowadzacy.setSelectedItem(objString);
 	}
 	
 	// dla okna edycji: aktualizuj wpis w bazie danych
-	private void updateObiekt() {
-		obiekt.setDataRozpoczecia(dataRozpoczecia.getValue());
-		obiekt.setDataZakonczenia(dataZakonczenia.getValue());
-		obiekt.setIdProwadzacy(Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
-		obiekt.setPowod(powod.getValue());
-		repo.save(obiekt);
+	private void updateobj() {
+		obj.setDataRozpoczecia(startDate.getValue());
+		obj.setDataZakonczenia(endDate.getValue());
+		obj.setIdProwadzacy(Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
+		obj.setPowod(textField.getValue());
+		repo.save(obj);
 	}
 }

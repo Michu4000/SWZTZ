@@ -5,13 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
 import pl.swztz.portal.models.Zajecia;
 
 public interface ZajeciaRepository extends JpaRepository<Zajecia, Long> {
 
 	Zajecia findByIdZajecia(Long Zajecia);
-	//List<Zajecia> findByNazwa(String value);
 	
 	@Modifying
 	@Transactional

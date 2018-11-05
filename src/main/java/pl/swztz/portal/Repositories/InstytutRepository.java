@@ -5,13 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
 import pl.swztz.portal.models.Instytut;
 
 public interface InstytutRepository extends JpaRepository<Instytut, Long> {
 	
 	Instytut findByIdInstytut(Long id);
-	//List<Instytut> findByNazwa(String value);
 	@Modifying
 	@Transactional
 	@Query(value = "DELETE INSTYTUT WHERE id_instytut=?1", nativeQuery = true)

@@ -5,13 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
-
 import pl.swztz.portal.models.Blad;
-
 public interface BladRepository extends JpaRepository<Blad, Long> {
 
 	Blad findByIdBlad(Long idBlad);
-	//List<Blad> findByNazwa(String value);
 	
 	@Modifying
 	@Transactional

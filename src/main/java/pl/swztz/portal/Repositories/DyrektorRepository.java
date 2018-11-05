@@ -1,8 +1,6 @@
 package pl.swztz.portal.repositories;
 
 import java.util.List;
-
-//import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +11,6 @@ import pl.swztz.portal.models.Dyrektor;
 public interface DyrektorRepository extends JpaRepository<Dyrektor, Long> {
 
 	Dyrektor findByIdDyrektor(Long idDyrektor);
-	//List<Dyrektor> findByNazwa(String value);
 	
 	@Modifying
 	@Transactional

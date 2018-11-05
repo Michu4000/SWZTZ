@@ -8,12 +8,6 @@ public class MeetingItem extends BasicItem {
 
 	private final Meeting meeting;
 
-	/**
-	 * constructor
-	 *
-	 * @param meeting A meeting
-	 */
-
 	public MeetingItem(Meeting meeting) {
         super(meeting.getDetails(), null, meeting.getStart(), meeting.getEnd());
         this.meeting = meeting;

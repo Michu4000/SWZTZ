@@ -7,9 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.repository.JpaRepository;
-
 import pl.swztz.portal.repositories.ZajeciaRepository;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 

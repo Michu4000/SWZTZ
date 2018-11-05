@@ -8,24 +8,23 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-
 import pl.swztz.portal.models.Student;
 import pl.swztz.portal.repositories.StudentRepository;
 
 public class OknoElementuStudent extends OknoElementu {
 	
-	private Student obiekt;
-	private TextField tf[];
+	private Student obj;
+	private TextField textField[];
 	private ComboBox<String[]> grupy;
 
-	public OknoElementuStudent(String nazwa, StudentRepository repo, boolean typOkna) {
-		super(nazwa, repo);
+	public OknoElementuStudent(String title, StudentRepository repo, boolean windowType) {
+		super(title, repo);
 		
-		// inicjalizacja elementow formularza
-		tf = new TextField[3];
-		tf[0] = new TextField("PESEL");
-		tf[1] = new TextField("Imię");
-		tf[2] = new TextField("Nazwisko");
+		// inicjalizacja elementów formularza
+		textField = new TextField[3];
+		textField[0] = new TextField("PESEL");
+		textField[1] = new TextField("Imię");
+		textField[2] = new TextField("Nazwisko");
 		
 		grupy = new ComboBox<>("Grupa");
 		List<String[]> stringArrayList = new ArrayList<>();
@@ -35,33 +34,33 @@ public class OknoElementuStudent extends OknoElementu {
 		}
 
 		grupy.setItems(stringArrayList);
-		grupy.setItemCaptionGenerator(x -> x[1]); // ustawia wyswietlanie nazwy instytutu w ComboBoxie
+		grupy.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy instytutu w ComboBoxie
 		
-		form.addComponents(tf[0], tf[1], tf[2], grupy);
+		form.addComponents(textField[0], textField[1], textField[2], grupy);
 		
-		if(typOkna)
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
 	}
 	
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
+		okButton.setCaption("Dodaj");
 		
 		// listener przycisku dodaj
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf[0].isEmpty() && !tf[1].isEmpty() && !tf[2].isEmpty() && !grupy.isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !grupy.isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					// wyskakujące okienko z komunikatem o błędzie
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
@@ -69,59 +68,59 @@ public class OknoElementuStudent extends OknoElementu {
 	
 	private void addNew() {
 		Long idGrupy = Long.parseLong(grupy.getSelectedItem().orElse(null)[0]);
-		Student s = new Student(Long.valueOf(tf[0].getValue()), tf[1].getValue(), tf[2].getValue(), idGrupy);
-		repo.save(s);
+		Student newObj = new Student(Long.valueOf(textField[0].getValue()), textField[1].getValue(), textField[2].getValue(), idGrupy);
+		repo.save(newObj);
 		clearForm();
 	}
 	
 	private void clearForm() {
-		for (TextField t : tf)
-			t.clear();
+		for (TextField tf : textField)
+			tf.clear();
 		grupy.clear();
 	}
 	
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((StudentRepository) repo).findByIdStudent(id);
+		obj = ((StudentRepository) repo).findByIdStudent(id);
 		loadToForm();
 		
-		// listener przycisku wprowadz zmiany
-		ok.addClickListener(new ClickListener() {
+		// listener przycisku wprowadź zmiany
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!tf[0].isEmpty() && !tf[1].isEmpty() && !tf[2].isEmpty() && !grupy.isEmpty()) {
-					updateObiekt(); 
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !grupy.isEmpty()) {
+					updateobj(); 
 					close();
 				}
 				else {
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 						public void onClose(ConfirmDialog dialog) {}
 					});
-					d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 				}
 			}
 		});
 	}
 	
 	private void loadToForm() {
-		Object[] objectArray = ((StudentRepository)repo).findGrupa(obiekt.getIdGrupa()).get(0);
-		String[] sobiekt = new String[] { ""+objectArray[0], (String)objectArray[1] };
+		Object[] objectArray = ((StudentRepository)repo).findGrupa(obj.getIdGrupa()).get(0);
+		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
 		
-		tf[0].setValue(String.valueOf(obiekt.getPESEL()));
-		tf[1].setValue(obiekt.getImie());
-		tf[2].setValue(obiekt.getNazwisko());
-		grupy.setSelectedItem(sobiekt);
+		textField[0].setValue(String.valueOf(obj.getPESEL()));
+		textField[1].setValue(obj.getImie());
+		textField[2].setValue(obj.getNazwisko());
+		grupy.setSelectedItem(objString);
 	}
 
-	private void updateObiekt() {
-		obiekt.setPESEL(Long.valueOf(tf[0].getValue()));
-		obiekt.setImie(tf[1].getValue());
-		obiekt.setNazwisko(tf[2].getValue());
-		obiekt.setIdGrupa(Long.parseLong(grupy.getSelectedItem().orElse(null)[0]));
-		repo.save(obiekt);
+	private void updateobj() {
+		obj.setPESEL(Long.valueOf(textField[0].getValue()));
+		obj.setImie(textField[1].getValue());
+		obj.setNazwisko(textField[2].getValue());
+		obj.setIdGrupa(Long.parseLong(grupy.getSelectedItem().orElse(null)[0]));
+		repo.save(obj);
 	}
 }

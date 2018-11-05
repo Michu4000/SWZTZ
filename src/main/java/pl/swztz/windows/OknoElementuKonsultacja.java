@@ -9,23 +9,22 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
-
 import pl.swztz.portal.models.Konsultacja;
 import pl.swztz.portal.repositories.KonsultacjaRepository;
 
 public class OknoElementuKonsultacja extends OknoElementu {
 
-	private Konsultacja obiekt;
-	private TextField tf[];
+	private Konsultacja obj;
+	private TextField textField[];
 	private DateField date;
 	private ComboBox<String[]> sala;
 	private ComboBox<Long> bloki;
 	
-	public OknoElementuKonsultacja(String nazwa, KonsultacjaRepository repo, boolean typOkna) {
-		super(nazwa, repo);
-		tf = new TextField[2];
-		tf[0] = new TextField("Prowadzący");
-		tf[1] = new TextField("Komentarz");
+	public OknoElementuKonsultacja(String title, KonsultacjaRepository repo, boolean windowType) {
+		super(title, repo);
+		textField = new TextField[2];
+		textField[0] = new TextField("Prowadzący");
+		textField[1] = new TextField("Komentarz");
 		
 		bloki = new ComboBox<>("Numer Bloku");
 		bloki.setItems(1L, 2L, 3L, 4L, 5L, 6L, 7L);
@@ -44,53 +43,53 @@ public class OknoElementuKonsultacja extends OknoElementu {
 		sala.setItems(stringArrayList);
 		sala.setItemCaptionGenerator(x -> x[1]);
 		
-		form.addComponents(date, bloki, sala, tf[0], tf[1]); // dodanie elementow do formularza
+		form.addComponents(date, bloki, sala, textField[0], textField[1]); // dodanie elementów do formularza
 		
-		// w zaleznosci od tego czy to okno dodawania czy edycji
-		if(typOkna)
+		// w zależności od tego czy to okno dodawania czy edycji
+		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
 	}
 
 	private void oknoEdycji() {
-		ok.setCaption("Wprowadź zmiany");
+		okButton.setCaption("Wprowadź zmiany");
 	}
 
 	private void oknoDodawania() {
-		ok.setCaption("Dodaj");
+		okButton.setCaption("Dodaj");
 		// listener przycisku dodaj
-		ok.addClickListener(new ClickListener() {
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!date.isEmpty() && !bloki.isEmpty() && !tf[0].isEmpty()) {
+				if(!date.isEmpty() && !bloki.isEmpty() && !textField[0].isEmpty()) {
 					addNew();
 					close();
 				}
 				else {
-					// wyskakujace okienko z komunikatem o bledzie
-					ConfirmDialog d = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
+					// wyskakujące okienko z komunikatem o błędzie
+					ConfirmDialog dialog = ConfirmDialog.show(UI.getCurrent(), "Błąd", "Wypełnij wszystkie pola", "OK", "", new ConfirmDialog.Listener() {
 							public void onClose(ConfirmDialog dialog) {}
 						});
-						d.getCancelButton().setVisible(false);
+					dialog.getCancelButton().setVisible(false);
 					}
 				}
 			});
 	}
 
 	protected void addNew() {
-		Konsultacja k;
+		Konsultacja newObj;
 		if(sala.getSelectedItem().orElse(null) != null)
-			k = new Konsultacja(date.getValue(), bloki.getValue(), Long.parseLong(sala.getSelectedItem().orElse(null)[0]), Long.parseLong(tf[0].getValue()), tf[1].getValue());
+			newObj = new Konsultacja(date.getValue(), bloki.getValue(), Long.parseLong(sala.getSelectedItem().orElse(null)[0]), Long.parseLong(textField[0].getValue()), textField[1].getValue());
 		else
-			k = new Konsultacja(date.getValue(), bloki.getValue(), null, Long.parseLong(tf[0].getValue()), tf[1].getValue());
-		repo.save(k);
+			newObj = new Konsultacja(date.getValue(), bloki.getValue(), null, Long.parseLong(textField[0].getValue()), textField[1].getValue());
+		repo.save(newObj);
 		clearform();
 	}
 
 	private void clearform() {
-		for (TextField t : tf)
-			t.clear();
+		for (TextField tf : textField)
+			tf.clear();
 		date.clear();
 		bloki.clear();
 		sala.clear();
@@ -98,15 +97,15 @@ public class OknoElementuKonsultacja extends OknoElementu {
 
 	@Override
 	public void setElement(Long id) {
-		obiekt = ((KonsultacjaRepository)repo).findByIdKonsultacja(id);
+		obj = ((KonsultacjaRepository)repo).findByIdKonsultacja(id);
 		loadToForm();
 		
-		// listener przycisku wprowadz zmiany
-		ok.addClickListener(new ClickListener() {
+		// listener przycisku wprowadź zmiany
+		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!date.isEmpty() && !bloki.isEmpty() && !tf[0].isEmpty()) {
-					updateObiekt(); 
+				if(!date.isEmpty() && !bloki.isEmpty() && !textField[0].isEmpty()) {
+					updateobj(); 
 					close();
 				}
 				else {
@@ -120,41 +119,41 @@ public class OknoElementuKonsultacja extends OknoElementu {
 	}
 	
 	private void loadToForm() {
-		if(obiekt.getIdSala() != null) {
-			Object[] objectArray = ((KonsultacjaRepository) repo).findSala(obiekt.getIdSala()).get(0);
-			String[] sobiekt = new String[] { ""+objectArray[0], (String)objectArray[1] };
-			sala.setSelectedItem(sobiekt);
+		if(obj.getIdSala() != null) {
+			Object[] objectArray = ((KonsultacjaRepository) repo).findSala(obj.getIdSala()).get(0);
+			String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
+			sala.setSelectedItem(objString);
 		}
 		else
 			sala.clear();
 		
-		date.setValue(obiekt.getData());
-		bloki.setValue(obiekt.getNrBloku());
-		tf[0].setValue(((KonsultacjaRepository) repo).findProwadzacy(obiekt.getIdKonsultacja()));
+		date.setValue(obj.getData());
+		bloki.setValue(obj.getNrBloku());
+		textField[0].setValue(((KonsultacjaRepository) repo).findProwadzacy(obj.getIdKonsultacja()));
 		
-		if(obiekt.getKomentarz() != null)
-			tf[1].setValue(obiekt.getKomentarz());
+		if(obj.getKomentarz() != null)
+			textField[1].setValue(obj.getKomentarz());
 		else
-			tf[1].setValue("");
+			textField[1].setValue("");
 	}
 	
-	protected void updateObiekt() {
-		obiekt.setData(date.getValue());
-		obiekt.setNrBloku(bloki.getValue());
+	protected void updateobj() {
+		obj.setData(date.getValue());
+		obj.setNrBloku(bloki.getValue());
 		
 		String[] ss = sala.getSelectedItem().orElse(null);
 		if(ss != null)
-			obiekt.setIdSala(Long.parseLong(ss[0]));
+			obj.setIdSala(Long.parseLong(ss[0]));
 		else
-			obiekt.setIdSala(null);
+			obj.setIdSala(null);
 		
-		obiekt.setProwadzacy(((KonsultacjaRepository)repo).findIdProwadzacy(tf[0].getValue()));
+		obj.setProwadzacy(((KonsultacjaRepository)repo).findIdProwadzacy(textField[0].getValue()));
 		
-		if(!tf[1].isEmpty())
-			obiekt.setKomentarz(tf[1].getValue());
+		if(!textField[1].isEmpty())
+			obj.setKomentarz(textField[1].getValue());
 		else
-			obiekt.setKomentarz("");
+			obj.setKomentarz("");
 
-		repo.save(obiekt);
+		repo.save(obj);
 	}
 }
