@@ -11,7 +11,7 @@ import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import pl.swztz.portal.models.*;
 import pl.swztz.portal.repositories.*;
-import pl.swztz.windows.*;
+import pl.swztz.portal.windows.*;
 
 @SpringUI
 @Theme("mytheme")

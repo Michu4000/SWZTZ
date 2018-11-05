@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

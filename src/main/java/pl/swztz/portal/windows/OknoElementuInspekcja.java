@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import java.sql.Date;
 import java.time.LocalDate;

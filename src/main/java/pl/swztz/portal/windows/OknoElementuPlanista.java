@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,24 +8,26 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import pl.swztz.portal.models.Instytut;
-import pl.swztz.portal.repositories.InstytutRepository;
-import pl.swztz.windows.OknoElementu;
+import pl.swztz.portal.models.Planista;
+import pl.swztz.portal.repositories.PlanistaRepository;
 
-public class OknoElementuInstytut extends OknoElementu {
+public class OknoElementuPlanista extends OknoElementu {
 
-	private Instytut obj;	
+	private Planista obj;
+	private TextField textField[];
 	private ComboBox<String[]> wydzial;
-	private TextField nazwaInstytut;
-	
-	public OknoElementuInstytut(String title, InstytutRepository repo, boolean windowType) {
-		super(title, repo); // konstruktor klasy bazowej
-
-		// inicjalizacja elementów formularza
-		nazwaInstytut= new TextField("Nazwa Instytutu");
 		
+	public OknoElementuPlanista(String title, PlanistaRepository repo, boolean windowType) {
+		super(title, repo); // konstruktor klasy bazowej
+			
+		// inicjalizacja elementów formularza
+		textField = new TextField[3];
+		textField[0] = new TextField("PESEL");
+		textField[1] = new TextField("Imię");
+		textField[2] = new TextField("Nazwisko");
+			
 		// inicjalizacja i pobranie danych do ComboBoxa (przepisanie jednej listy do drugiej)
-		wydzial = new ComboBox<>("Wydział");
+		wydzial = new ComboBox<>("Wydzial");
 		List<String[]> stringArrayList = new ArrayList<>();
 
 		for(Object[] objectArray : repo.findWydzialy()) {
@@ -34,16 +36,16 @@ public class OknoElementuInstytut extends OknoElementu {
 
 		wydzial.setItems(stringArrayList);
 		wydzial.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy użytkownika w ComboBoxie
-
-		form.addComponents(nazwaInstytut, wydzial); // dodanie elementów do formularza 
-		
-		// w zależności od tego czy to okno dodawania czy edycji
+			
+		form.addComponents(wydzial, textField[0], textField[1], textField[2]); // dodanie elementów do formularza
+			
+		// w zależnosci od tego czy to okno dodawania czy edycji
 		if(windowType)
 			oknoDodawania();
 		else
 			oknoEdycji();
 	}
-	
+		
 	// tylko dla okna dodawania
 	private void oknoDodawania() {
 		okButton.setCaption("Dodaj");
@@ -52,7 +54,7 @@ public class OknoElementuInstytut extends OknoElementu {
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!nazwaInstytut.isEmpty() && !wydzial.isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !wydzial.isEmpty()) {
 					addNew();
 					close();
 				}
@@ -66,36 +68,37 @@ public class OknoElementuInstytut extends OknoElementu {
 			}
 		});
 	}
-	
+		
 	private void addNew() {
-		Long idWydzial = Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]);
-		Instytut newObj = new Instytut(nazwaInstytut.getValue(), idWydzial);
+		Long idPlanista = Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]);
+		Planista newObj = new Planista(idPlanista, Long.parseLong(textField[0].getValue()), textField[1].getValue(), textField[2].getValue());
 		repo.save(newObj);
 		clearForm();
 	}
-	
+		
 	private void clearForm() {
-		nazwaInstytut.clear();
+		for (TextField tf : textField)
+			tf.clear();
 		wydzial.clear();
 	}
-	
+		
 	// tylko dla okna edycji
 	private void oknoEdycji() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
-	
+		
 	// dla okna edycji: ustaw id edytowanego wpisu
 	@Override
 	public void setElement(Long id) {
-		obj = ((InstytutRepository)repo).findByIdInstytut(id);
+		obj = ((PlanistaRepository)repo).findByIdPlanista(id);
 		loadToForm();
-		
+			
 		// listener przycisku wprowadź zmiany
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!wydzial.isEmpty() &&   !nazwaInstytut.isEmpty()) {
-					updateObiekt(); 
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !wydzial.isEmpty()) {
+					updateobj(); 
 					close();
 				}
 				else {
@@ -107,21 +110,24 @@ public class OknoElementuInstytut extends OknoElementu {
 			}
 		});
 	}
-	
+		
 	// dla okna edycji: pobierz dane formularza
 	private void loadToForm() {
-		Object[] objectArray = ((InstytutRepository)repo).findWydzial(obj.getIdWydzial()).get(0);
+		Object[] objectArray = ((PlanistaRepository)repo).findWydzial(obj.getIdWydzial()).get(0);
 		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
-		
-		nazwaInstytut.setValue(obj.getNazwaInstytut());
+			
+		textField[0].setValue(""+obj.getPESEL());
+		textField[1].setValue(obj.getImie());
+		textField[2].setValue(obj.getNazwisko());
 		wydzial.setSelectedItem(objString);
 	}
-	
-	// dla okna edycji: aktualizuj wpis w bazie danych
-	private void updateObiekt() {
-		obj.setNazwaInstytut(nazwaInstytut.getValue());
-		obj.setIdWydzial(Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]));
 		
+	// dla okna edycji: aktualizuj wpis w bazie danych
+	private void updateobj() {
+		obj.setPESEL(Long.parseLong(textField[0].getValue()));
+		obj.setImie(textField[1].getValue());
+		obj.setNazwisko(textField[2].getValue());
+		obj.setIdWydzial(Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]));
 		repo.save(obj);
 	}
 }

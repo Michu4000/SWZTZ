@@ -1,6 +1,7 @@
-package pl.swztz.utils;
+package pl.swztz.portal.utils;
 
-import static pl.swztz.utils.Meeting.State.empty;
+import static pl.swztz.portal.utils.Meeting.State.empty;
+
 import java.time.ZonedDateTime;
 
 public class Meeting {

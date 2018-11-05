@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.vaadin.ui.*;

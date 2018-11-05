@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import java.lang.reflect.Method;
 import java.util.List;

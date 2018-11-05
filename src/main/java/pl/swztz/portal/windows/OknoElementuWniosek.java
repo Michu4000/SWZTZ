@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;

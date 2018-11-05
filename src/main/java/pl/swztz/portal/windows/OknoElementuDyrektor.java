@@ -1,52 +1,44 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.vaadin.dialogs.ConfirmDialog;
-import com.vaadin.shared.ui.datefield.DateTimeResolution;
-import com.vaadin.ui.*;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import pl.swztz.portal.models.Blad;
-import pl.swztz.portal.repositories.BladRepository;
+import pl.swztz.portal.models.Dyrektor;
+import pl.swztz.portal.repositories.DyrektorRepository;
 
-public class OknoElementuBlad extends OknoElementu {
+public class OknoElementuDyrektor extends OknoElementu {
 	
-	private Blad obj;
+	private Dyrektor obj;
 	private TextField textField[];
-	private DateTimeField date;
-	private CheckBox checkbox;
-	private ComboBox<String[]> user;
+	private ComboBox<String[]> instytut;
 	
-	public OknoElementuBlad(String title, BladRepository repo, boolean windowType) {
+	public OknoElementuDyrektor(String title, DyrektorRepository repo, boolean windowType) {
 		super(title, repo); // konstruktor klasy bazowej
 		
 		// inicjalizacja elementów formularza
-		textField = new TextField[2];
-		textField[0] = new TextField("Temat");
-		textField[1] = new TextField("Opis");
-		
-		date = new DateTimeField("Data zgłoszenia");
-		date.setDateFormat("dd-MM-yyyy HH:mm:ss");
-		date.setResolution(DateTimeResolution.SECOND);
-		date.setTextFieldEnabled(false);
-		date.setValue(LocalDateTime.now());
-		
-		checkbox = new CheckBox("Rozpatrzono");
+		textField = new TextField[4];
+		textField[0] = new TextField("PESEL");
+		textField[1] = new TextField("Imię");
+		textField[2] = new TextField("Nazwisko");
+		textField[3] = new TextField("Pokój");
 		
 		// inicjalizacja i pobranie danych do ComboBoxa (przepisanie jednej listy do drugiej)
-		user = new ComboBox<>("Zgłaszający");
+		instytut = new ComboBox<>("Instytut");
 		List<String[]> stringArrayList = new ArrayList<>();
 
-		for(Object[] objectArray : repo.findUsers()) {
+		for(Object[] objectArray : repo.findInstytuty()) {
 			stringArrayList.add(new String[] { ""+objectArray[0], (String) objectArray[1] });
 		}
 
-		user.setItems(stringArrayList);
-		user.setItemCaptionGenerator(x -> x[1]); // ustawia wyswietlanie nazwy użykownika w ComboBoxie
+		instytut.setItems(stringArrayList);
+		instytut.setItemCaptionGenerator(x -> x[1]); // ustawia wyświetlanie nazwy instytutu w ComboBoxie
 		
-		form.addComponents(textField[0], textField[1], date, checkbox, user); // dodanie elementów do formularza
+		form.addComponents(instytut, textField[0], textField[1], textField[2], textField[3]); // dodanie elementów do formularza
 		
 		// w zależności od tego czy to okno dodawania czy edycji
 		if(windowType)
@@ -63,7 +55,7 @@ public class OknoElementuBlad extends OknoElementu {
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !user.isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !textField[3].isEmpty() && !instytut.isEmpty()) {
 					addNew();
 					close();
 				}
@@ -79,8 +71,8 @@ public class OknoElementuBlad extends OknoElementu {
 	}
 	
 	private void addNew() {
-		Long iduser = Long.parseLong(user.getSelectedItem().orElse(null)[0]);
-		Blad newObj = new Blad(iduser, textField[0].getValue(), textField[1].getValue(), date.getValue(), checkbox.getValue());
+		Long idDyrektor = Long.parseLong(instytut.getSelectedItem().orElse(null)[0]);
+		Dyrektor newObj = new Dyrektor(idDyrektor, Long.parseLong(textField[0].getValue()), textField[1].getValue(), textField[2].getValue(), textField[3].getValue());
 		repo.save(newObj);
 		clearForm();
 	}
@@ -88,9 +80,7 @@ public class OknoElementuBlad extends OknoElementu {
 	private void clearForm() {
 		for (TextField tf : textField)
 			tf.clear();
-		date.clear();
-		checkbox.clear();
-		user.clear();
+		instytut.clear();
 	}
 	
 	// tylko dla okna edycji
@@ -101,15 +91,15 @@ public class OknoElementuBlad extends OknoElementu {
 	// dla okna edycji: ustaw id edytowanego wpisu
 	@Override
 	public void setElement(Long id) {
-		obj = ((BladRepository)repo).findByIdBlad(id);
+		obj = ((DyrektorRepository)repo).findByIdDyrektor(id);
 		loadToForm();
 		
 		// listener przycisku wprowadź zmiany
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !user.isEmpty()) {
-					updateObj(); 
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !textField[3].isEmpty() && !instytut.isEmpty()) {
+					updateObiekt(); 
 					close();
 				}
 				else {
@@ -124,23 +114,23 @@ public class OknoElementuBlad extends OknoElementu {
 	
 	// dla okna edycji: pobierz dane formularza
 	private void loadToForm() {
-		Object[] objectArray = ((BladRepository)repo).findUser(obj.getIdUzytkownik()).get(0);
+		Object[] objectArray = ((DyrektorRepository)repo).findInstytut(obj.getIdInstytut()).get(0);
 		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
 		
-		textField[0].setValue(obj.getTemat());
-		textField[1].setValue(obj.getOpis());
-		date.setValue(obj.getDataZgloszenia());
-		checkbox.setValue(obj.isRozpatrzono());
-		user.setSelectedItem(objString);
+		textField[0].setValue(""+obj.getPESEL());
+		textField[1].setValue(obj.getImie());
+		textField[2].setValue(obj.getNazwisko());
+		textField[3].setValue(obj.getPokoj());
+		instytut.setSelectedItem(objString);
 	}
 	
 	// dla okna edycji: aktualizuj wpis w bazie danych
-	private void updateObj() {
-		obj.setTemat(textField[0].getValue());
-		obj.setOpis(textField[1].getValue());
-		obj.setDataZgloszenia(date.getValue());
-		obj.setRozpatrzono(checkbox.getValue());
-		obj.setIdUzytkownik(Long.parseLong(user.getSelectedItem().orElse(null)[0]));
+	private void updateObiekt() {
+		obj.setPESEL(Long.parseLong(textField[0].getValue()));
+		obj.setImie(textField[1].getValue());
+		obj.setNazwisko(textField[2].getValue());
+		obj.setPokoj(textField[3].getValue());
+		obj.setIdInstytut(Long.parseLong(instytut.getSelectedItem().orElse(null)[0]));
 		repo.save(obj);
 	}
 }

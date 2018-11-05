@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import java.util.Locale;
 import org.vaadin.addon.calendar.Calendar;
@@ -8,8 +8,9 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import pl.swztz.portal.models.ZajeciaView;
 import pl.swztz.portal.repositories.ZajeciaViewRepository;
-import pl.swztz.utils.Meeting;
-import pl.swztz.utils.MeetingItem;
+import pl.swztz.portal.utils.Meeting;
+import pl.swztz.portal.utils.MeetingItem;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;

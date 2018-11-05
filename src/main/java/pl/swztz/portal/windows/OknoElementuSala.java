@@ -1,4 +1,4 @@
-package pl.swztz.windows;
+package pl.swztz.portal.windows;
 
 import org.vaadin.dialogs.ConfirmDialog;
 import com.vaadin.ui.TextField;

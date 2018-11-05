@@ -1,4 +1,4 @@
-package pl.swztz.utils;
+package pl.swztz.portal.utils;
 
 import com.vaadin.icons.VaadinIcons;
 import org.vaadin.addon.calendar.item.BasicItem;
