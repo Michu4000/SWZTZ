@@ -12,13 +12,13 @@ import com.vaadin.ui.ComboBox;
 import pl.swztz.portal.models.Grupa;
 import pl.swztz.portal.repositories.GrupaRepository;
 
-public class OknoElementuGrupa extends OknoElementu {
+public class ElementWindowGrupa extends ElementWindow {
 
 	private Grupa obj;
 	private TextField textField[];
 	private ComboBox<String[]> starosta;
 	
-	public OknoElementuGrupa(String title, JpaRepository repo, boolean windowType) {
+	public ElementWindowGrupa(String title, JpaRepository repo, boolean windowType) {
 		super(title, repo);
 		
 		// initialize elements of the form

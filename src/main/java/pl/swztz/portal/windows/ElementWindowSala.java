@@ -8,12 +8,12 @@ import com.vaadin.ui.Button.ClickListener;
 import pl.swztz.portal.models.Sala;
 import pl.swztz.portal.repositories.SalaRepository;
 
-public class OknoElementuSala extends OknoElementu {
+public class ElementWindowSala extends ElementWindow {
 
 	private Sala obj;
 	private TextField textField[];
 		
-	public OknoElementuSala(String title, SalaRepository repo, boolean windowType) {
+	public ElementWindowSala(String title, SalaRepository repo, boolean windowType) {
 		super(title, repo);
 		
 		// initialize elements of the form

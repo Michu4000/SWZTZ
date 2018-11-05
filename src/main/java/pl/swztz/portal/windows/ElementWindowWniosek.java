@@ -12,7 +12,7 @@ import org.vaadin.dialogs.ConfirmDialog;
 import pl.swztz.portal.models.Wniosek;
 import pl.swztz.portal.repositories.WniosekRepository;
 
-public class OknoElementuWniosek extends OknoElementu {
+public class ElementWindowWniosek extends ElementWindow {
 
 	private Wniosek obj;
 	private ComboBox<String[]> prowadzacy;
@@ -21,7 +21,7 @@ public class OknoElementuWniosek extends OknoElementu {
 	private CheckBox decyzja;
 	private CheckBox czyZmieniono;
 	
-	public OknoElementuWniosek(String title, WniosekRepository repo, boolean windowType) {
+	public ElementWindowWniosek(String title, WniosekRepository repo, boolean windowType) {
 		super(title, repo);
 		
 	  prowadzacy = new ComboBox<>("Prowadzacy");

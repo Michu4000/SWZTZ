@@ -11,13 +11,13 @@ import com.vaadin.ui.Button.ClickListener;
 import pl.swztz.portal.models.Przedmiot;
 import pl.swztz.portal.repositories.PrzedmiotRepository;
 
-public class OknoElementuPrzedmiot extends OknoElementu {
+public class ElementWindowPrzedmiot extends ElementWindow {
 
 	private Przedmiot obj;
 	private TextField textField;
 	private ComboBox<String[]> instytut;
 	
-	public OknoElementuPrzedmiot(String title, PrzedmiotRepository repo, boolean windowType) {
+	public ElementWindowPrzedmiot(String title, PrzedmiotRepository repo, boolean windowType) {
 		super(title, repo);
 		
 		textField= new TextField("Nazwa przedmiotu");

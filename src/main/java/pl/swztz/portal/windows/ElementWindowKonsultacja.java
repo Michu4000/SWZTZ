@@ -12,7 +12,7 @@ import com.vaadin.ui.DateField;
 import pl.swztz.portal.models.Konsultacja;
 import pl.swztz.portal.repositories.KonsultacjaRepository;
 
-public class OknoElementuKonsultacja extends OknoElementu {
+public class ElementWindowKonsultacja extends ElementWindow {
 
 	private Konsultacja obj;
 	private TextField textField[];
@@ -20,7 +20,7 @@ public class OknoElementuKonsultacja extends OknoElementu {
 	private ComboBox<String[]> sala;
 	private ComboBox<Long> bloki;
 	
-	public OknoElementuKonsultacja(String title, KonsultacjaRepository repo, boolean windowType) {
+	public ElementWindowKonsultacja(String title, KonsultacjaRepository repo, boolean windowType) {
 		super(title, repo);
 		textField = new TextField[2];
 		textField[0] = new TextField("Prowadzący");

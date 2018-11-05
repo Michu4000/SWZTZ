@@ -11,7 +11,7 @@ import com.vaadin.ui.Button.ClickListener;
 import pl.swztz.portal.models.Blad;
 import pl.swztz.portal.repositories.BladRepository;
 
-public class OknoElementuBlad extends OknoElementu {
+public class ElementWindowBlad extends ElementWindow {
 	
 	private Blad obj;
 	private TextField textField[];
@@ -19,7 +19,7 @@ public class OknoElementuBlad extends OknoElementu {
 	private CheckBox checkbox;
 	private ComboBox<String[]> user;
 	
-	public OknoElementuBlad(String title, BladRepository repo, boolean windowType) {
+	public ElementWindowBlad(String title, BladRepository repo, boolean windowType) {
 		super(title, repo); // constructor of the base class
 		
 		// initialize elements of the form

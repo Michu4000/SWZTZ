@@ -9,12 +9,12 @@ import com.vaadin.ui.UI;
 import pl.swztz.portal.models.Wydzial;
 import pl.swztz.portal.repositories.WydzialRepository;
 
-public class OknoElementuWydzial extends OknoElementu {
+public class ElementWindowWydzial extends ElementWindow {
 
 	private Wydzial obj;
 	private TextField textField;
 	
-	public OknoElementuWydzial(String title, JpaRepository repo, boolean windowType) {
+	public ElementWindowWydzial(String title, JpaRepository repo, boolean windowType) {
 		super(title, repo);
 		textField = new TextField("Nazwa");
 		

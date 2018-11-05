@@ -9,7 +9,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class OknoElementuZapytanie extends OknoElementu {
+public class ElementWindowZapytanie extends ElementWindow {
 	
 	private Zapytanie obj;
 	private TextField textField[];
@@ -17,7 +17,7 @@ public class OknoElementuZapytanie extends OknoElementu {
 	private ComboBox<String[]> prowadzacy;
 	private String parentWindowTitle;
 
-	public OknoElementuZapytanie(String title, ZapytanieRepository repo, boolean windowType, String parentWindowTitle) {
+	public ElementWindowZapytanie(String title, ZapytanieRepository repo, boolean windowType, String parentWindowTitle) {
 		super(title, repo);
 		
 		textField = new TextField[2];

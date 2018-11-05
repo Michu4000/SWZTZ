@@ -11,7 +11,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 
-public class OknoAplikacji<T, S> extends Window {
+public class ApplicationWindow<T, S> extends Window {
 
 	private VerticalLayout layout = new VerticalLayout(); // main window layout
 	private HorizontalLayout hlayout = new HorizontalLayout(); // layout for buttons
@@ -20,8 +20,8 @@ public class OknoAplikacji<T, S> extends Window {
 	protected Button addButton = new Button("Dodaj");
 	protected Button deleteButton = new Button("Usuń");
 
-	public OknoAplikacji(String title, JpaRepository viewRepo, JpaRepository tableRepo, Class<T> viewType,
-			Class<S> tableType, OknoElementu addWindow, OknoElementu editWindow) {
+	public ApplicationWindow(String title, JpaRepository viewRepo, JpaRepository tableRepo, Class<T> viewType,
+			Class<S> tableType, ElementWindow addWindow, ElementWindow editWindow) {
 		super(title); // window title
 		this.grid = new Grid<>(viewType);
 
@@ -46,7 +46,7 @@ public class OknoAplikacji<T, S> extends Window {
 		addButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				OknoElementu window = addWindow;
+				ElementWindow window = addWindow;
 				window.addCloseListener(new CloseListener() {
 					public void windowClose(CloseEvent e) {
 						grid.setItems(viewRepo.findAll()); // refresh grid
@@ -72,7 +72,7 @@ public class OknoAplikacji<T, S> extends Window {
 							});
 					dialog.getCancelButton().setVisible(false);
 				} else {
-					OknoElementu window = editWindow;
+					ElementWindow window = editWindow;
 					T el = (T) toEdit.toArray()[0];
 					try {
 						Method getId = viewType.getMethod("getId");
@@ -140,7 +140,7 @@ public class OknoAplikacji<T, S> extends Window {
 			if (e.getMouseEventDetails().getType() == 2) {
 				T doEdycji = (T) e.getItem();
 
-				OknoElementu window = editWindow;
+				ElementWindow window = editWindow;
 				try {
 					Method getId = viewType.getMethod("getId");
 					Long i = (Long) getId.invoke(doEdycji);

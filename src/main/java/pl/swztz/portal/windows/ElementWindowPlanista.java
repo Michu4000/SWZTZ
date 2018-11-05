@@ -4,56 +4,48 @@ import java.util.ArrayList;
 import java.util.List;
 import org.vaadin.dialogs.ConfirmDialog;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import pl.swztz.portal.models.Urlop;
-import pl.swztz.portal.repositories.UrlopRepository;
-import pl.swztz.portal.windows.OknoElementu;
+import pl.swztz.portal.models.Planista;
+import pl.swztz.portal.repositories.PlanistaRepository;
 
-public class OknoElementuUrlop extends OknoElementu {
+public class ElementWindowPlanista extends ElementWindow {
 
-	private Urlop obj;
-	private DateField startDate, endDate;
-	private ComboBox<String[]> prowadzacy;
-	private TextField textField;
+	private Planista obj;
+	private TextField textField[];
+	private ComboBox<String[]> wydzial;
 		
-	public OknoElementuUrlop(String title, UrlopRepository repo, boolean windowType) {
+	public ElementWindowPlanista(String title, PlanistaRepository repo, boolean windowType) {
 		super(title, repo); // constructor of the base class
-
-		// initialize elements of the form
-		textField = new TextField("Powód");
 			
-		startDate = new DateField("Data rozpoczecia");
-		startDate.setDateFormat("dd-MM-yyyy");
-		startDate.setTextFieldEnabled(false);
-		
-		endDate = new DateField("Data zakończenia");
-		endDate.setDateFormat("dd-MM-yyyy");
-		endDate.setTextFieldEnabled(false);
-		
+		// initialize elements of the form
+		textField = new TextField[3];
+		textField[0] = new TextField("PESEL");
+		textField[1] = new TextField("Imię");
+		textField[2] = new TextField("Nazwisko");
+			
 		// initialize combobox and get data
-		prowadzacy = new ComboBox<>("Prowadzacy");
+		wydzial = new ComboBox<>("Wydzial");
 		List<String[]> stringArrayList = new ArrayList<>();
 
-		for(Object[] objectArray : repo.findProwadzacych()) {
+		for(Object[] objectArray : repo.findWydzialy()) {
 			stringArrayList.add(new String[] { ""+objectArray[0], (String) objectArray[1] });
 		}
 
-		prowadzacy.setItems(stringArrayList);
-		prowadzacy.setItemCaptionGenerator(x -> x[1]); // set displaying user name in combobox
-
-		form.addComponents(prowadzacy, startDate, endDate, textField); // add elements to form 
-		
-		// depending on whether it's a add window or edit window
+		wydzial.setItems(stringArrayList);
+		wydzial.setItemCaptionGenerator(x -> x[1]); // set displaying user name in combobox
+			
+		form.addComponents(wydzial, textField[0], textField[1], textField[2]); // add elements to form
+			
+		// depending on whether it is add window or edit window
 		if(windowType)
 			addWindow();
 		else
 			editWindow();
 	}
-	
+		
 	// only for add window
 	private void addWindow() {
 		okButton.setCaption("Dodaj");
@@ -62,7 +54,7 @@ public class OknoElementuUrlop extends OknoElementu {
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!textField.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty() &&  !prowadzacy.isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !wydzial.isEmpty()) {
 					addNew();
 					close();
 				}
@@ -76,37 +68,36 @@ public class OknoElementuUrlop extends OknoElementu {
 			}
 		});
 	}
-	
+		
 	private void addNew() {
-		Long idProwadzacy = Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]);
-		Urlop newObj = new Urlop(idProwadzacy, startDate.getValue(), endDate.getValue(), textField.getValue());
+		Long idPlanista = Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]);
+		Planista newObj = new Planista(idPlanista, Long.parseLong(textField[0].getValue()), textField[1].getValue(), textField[2].getValue());
 		repo.save(newObj);
 		clearForm();
 	}
-	
+		
 	private void clearForm() {
-		textField.clear();
-		prowadzacy.clear();
-		startDate.clear();
-		endDate.clear();
+		for (TextField tf : textField)
+			tf.clear();
+		wydzial.clear();
 	}
-	
+		
 	// only for edit window
 	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
-	
+		
 	// for edit window: set id for edited entry
 	@Override
 	public void setElement(Long id) {
-		obj = ((UrlopRepository)repo).findByIdUrlop(id);
+		obj = ((PlanistaRepository)repo).findByIdPlanista(id);
 		loadToForm();
-		
+			
 		// set listener for apply changes button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!prowadzacy.isEmpty() && !startDate.isEmpty() && !endDate.isEmpty() && !textField.isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !wydzial.isEmpty()) {
 					updateobj(); 
 					close();
 				}
@@ -119,24 +110,24 @@ public class OknoElementuUrlop extends OknoElementu {
 			}
 		});
 	}
-	
+		
 	// for edit window: get data to form
 	private void loadToForm() {
-		Object[] objectArray = ((UrlopRepository)repo).findProwadzacy(obj.getIdProwadzacy()).get(0);
+		Object[] objectArray = ((PlanistaRepository)repo).findWydzial(obj.getIdWydzial()).get(0);
 		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
-		
-		startDate.setValue(obj.getDataRozpoczecia());
-		endDate.setValue(obj.getDataZakonczenia());
-		textField.setValue(obj.getPowod());
-		prowadzacy.setSelectedItem(objString);
+			
+		textField[0].setValue(""+obj.getPESEL());
+		textField[1].setValue(obj.getImie());
+		textField[2].setValue(obj.getNazwisko());
+		wydzial.setSelectedItem(objString);
 	}
-	
+		
 	// for edit window: update entry in database
 	private void updateobj() {
-		obj.setDataRozpoczecia(startDate.getValue());
-		obj.setDataZakonczenia(endDate.getValue());
-		obj.setIdProwadzacy(Long.parseLong(prowadzacy.getSelectedItem().orElse(null)[0]));
-		obj.setPowod(textField.getValue());
+		obj.setPESEL(Long.parseLong(textField[0].getValue()));
+		obj.setImie(textField[1].getValue());
+		obj.setNazwisko(textField[2].getValue());
+		obj.setIdWydzial(Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]));
 		repo.save(obj);
 	}
 }

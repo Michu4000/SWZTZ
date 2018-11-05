@@ -68,7 +68,7 @@ public class VaadinUI extends UI {
 	private CustomLayout customLayout;
 	private Panel panel1;
 	private HorizontalLayout layout;
-	private OknoAplikacji appWindow;
+	private ApplicationWindow appWindow;
 
 	@Autowired
 	public VaadinUI(ZapytanieViewRepository zapytanieViewRepo, ZapytanieRepository zapytanieRepo,
@@ -200,135 +200,135 @@ public class VaadinUI extends UI {
 	private void addListeners() {
 
 		buttonApp[0].addClickListener(e -> {
-			UI.getCurrent().addWindow(new OknoPlan(zajeciaViewRepo));
+			UI.getCurrent().addWindow(new ApplicationWindowPlan(zajeciaViewRepo));
 		});
 
 		buttonApp[1].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<ZajeciaView, Zajecia>("Lista zajęć", zajeciaViewRepo,
+			appListener(appWindow = new ApplicationWindow<ZajeciaView, Zajecia>("Lista zajęć", zajeciaViewRepo,
 					zajeciaRepo, ZajeciaView.class, Zajecia.class,
-					new OknoElementuZajecia("Dodaj nowy element", zajeciaRepo, true),
-					new OknoElementuZajecia("Edytuj element", zajeciaRepo, false)));
+					new ElementWindowZajecia("Dodaj nowy element", zajeciaRepo, true),
+					new ElementWindowZajecia("Edytuj element", zajeciaRepo, false)));
 		});
 
 		buttonApp[2].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<ZapytanieView, Zapytanie>("Zapytania o przełożenie zajęć",
+			appListener(appWindow = new ApplicationWindow<ZapytanieView, Zapytanie>("Zapytania o przełożenie zajęć",
 					zapytanieViewRepo, zapytanieRepo, ZapytanieView.class, Zapytanie.class,
-					new OknoElementuZapytanie("Dodaj nowy element", zapytanieRepo, true, "Zapytanie"),
-					new OknoElementuZapytanie("Edytuj element", zapytanieRepo, false, "Zapytanie")));
+					new ElementWindowZapytanie("Dodaj nowy element", zapytanieRepo, true, "Zapytanie"),
+					new ElementWindowZapytanie("Edytuj element", zapytanieRepo, false, "Zapytanie")));
 		});
 
 		buttonApp[3].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacjiWiadomosc<WiadomoscView, Wiadomosc>("Wiadomosc",
+			appListener(appWindow = new ApplicationWindowWiadomosc<WiadomoscView, Wiadomosc>("Wiadomosc",
 					wiadomoscViewRepo, wiadomoscRepo, WiadomoscView.class, Wiadomosc.class,
-					new OknoElementuWiadomosc("Dodaj nowy element", wiadomoscRepo, true),
-					new OknoElementuWiadomosc("Edytuj element", wiadomoscRepo, false)));
+					new ElementWindowWiadomosc("Dodaj nowy element", wiadomoscRepo, true),
+					new ElementWindowWiadomosc("Edytuj element", wiadomoscRepo, false)));
 		});
 
 		buttonApp[4].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<KonsultacjaView, Konsultacja>("Konsultacje",
+			appListener(appWindow = new ApplicationWindow<KonsultacjaView, Konsultacja>("Konsultacje",
 					konsultacjaViewRepo, konsultacjaRepo, KonsultacjaView.class, Konsultacja.class,
-					new OknoElementuKonsultacja("Dodaj nowy element", konsultacjaRepo, true),
-					new OknoElementuKonsultacja("Edytuj element", konsultacjaRepo, false)));
+					new ElementWindowKonsultacja("Dodaj nowy element", konsultacjaRepo, true),
+					new ElementWindowKonsultacja("Edytuj element", konsultacjaRepo, false)));
 		});
 
 		buttonApp[5].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<WniosekView, Wniosek>("Wnioski o przełożenie zajęć",
+			appListener(appWindow = new ApplicationWindow<WniosekView, Wniosek>("Wnioski o przełożenie zajęć",
 					wniosekViewRepo, wniosekRepo, WniosekView.class, Wniosek.class,
-					new OknoElementuWniosek("Dodaj nowy element", wniosekRepo, true),
-					new OknoElementuWniosek("Edytuj element", wniosekRepo, false)));
+					new ElementWindowWniosek("Dodaj nowy element", wniosekRepo, true),
+					new ElementWindowWniosek("Edytuj element", wniosekRepo, false)));
 		});
 
 		buttonApp[6].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<UrlopView, Urlop>("Urlopy", urlopViewRepo, urlopRepo,
-					UrlopView.class, Urlop.class, new OknoElementuUrlop("Dodaj nowy element", urlopRepo, true),
-					new OknoElementuUrlop("Edytuj element", urlopRepo, false)));
+			appListener(appWindow = new ApplicationWindow<UrlopView, Urlop>("Urlopy", urlopViewRepo, urlopRepo,
+					UrlopView.class, Urlop.class, new ElementWindowUrlop("Dodaj nowy element", urlopRepo, true),
+					new ElementWindowUrlop("Edytuj element", urlopRepo, false)));
 		});
 
 		buttonApp[7].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<InspekcjaView, Inspekcja>("Inspekcje", inspekcjaViewRepo,
+			appListener(appWindow = new ApplicationWindow<InspekcjaView, Inspekcja>("Inspekcje", inspekcjaViewRepo,
 					inspekcjaRepo, InspekcjaView.class, Inspekcja.class,
-					new OknoElementuInspekcja("Dodaj nowy element", inspekcjaRepo, true),
-					new OknoElementuInspekcja("Edytuj element", inspekcjaRepo, false)));
+					new ElementWindowInspekcja("Dodaj nowy element", inspekcjaRepo, true),
+					new ElementWindowInspekcja("Edytuj element", inspekcjaRepo, false)));
 		});
 
 		buttonApp[8].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<SalaView, Sala>("Sale", salaViewRepo, salaRepo,
-					SalaView.class, Sala.class, new OknoElementuSala("Dodaj nowy element", salaRepo, true),
-					new OknoElementuSala("Edytuj element", salaRepo, false)));
+			appListener(appWindow = new ApplicationWindow<SalaView, Sala>("Sale", salaViewRepo, salaRepo,
+					SalaView.class, Sala.class, new ElementWindowSala("Dodaj nowy element", salaRepo, true),
+					new ElementWindowSala("Edytuj element", salaRepo, false)));
 		});
 
 		buttonApp[9].addClickListener(e -> {
 			appListener(
-					appWindow = new OknoAplikacji<GrupaView, Grupa>("Grupy studenckie", grupaViewRepo, grupaRepo,
-							GrupaView.class, Grupa.class, new OknoElementuGrupa("Dodaj nowy element", grupaRepo, true),
-							new OknoElementuGrupa("Edytuj element", grupaRepo, false)));
+					appWindow = new ApplicationWindow<GrupaView, Grupa>("Grupy studenckie", grupaViewRepo, grupaRepo,
+							GrupaView.class, Grupa.class, new ElementWindowGrupa("Dodaj nowy element", grupaRepo, true),
+							new ElementWindowGrupa("Edytuj element", grupaRepo, false)));
 		});
 
 		buttonApp[10].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<StudentView, Student>("Studenci", studentViewRepo,
+			appListener(appWindow = new ApplicationWindow<StudentView, Student>("Studenci", studentViewRepo,
 					studentRepo, StudentView.class, Student.class,
-					new OknoElementuStudent("Dodaj nowy element", studentRepo, true),
-					new OknoElementuStudent("Edytuj element", studentRepo, false)));
+					new ElementWindowStudent("Dodaj nowy element", studentRepo, true),
+					new ElementWindowStudent("Edytuj element", studentRepo, false)));
 		});
 
 		buttonApp[11].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<ProwadzacyView, Prowadzacy>("Prowadzący zajęcia",
+			appListener(appWindow = new ApplicationWindow<ProwadzacyView, Prowadzacy>("Prowadzący zajęcia",
 					prowadzacyViewRepo, prowadzacyRepo, ProwadzacyView.class, Prowadzacy.class,
-					new OknoElementuProwadzacy("Dodaj nowy element", prowadzacyRepo, true),
-					new OknoElementuProwadzacy("Edytuj element", prowadzacyRepo, false)));
+					new ElementWindowProwadzacy("Dodaj nowy element", prowadzacyRepo, true),
+					new ElementWindowProwadzacy("Edytuj element", prowadzacyRepo, false)));
 		});
 
 		buttonApp[12].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<InstytutView, Instytut>("Instytuty", instytutViewRepo,
+			appListener(appWindow = new ApplicationWindow<InstytutView, Instytut>("Instytuty", instytutViewRepo,
 					instytutRepo, InstytutView.class, Instytut.class,
-					new OknoElementuInstytut("Dodaj nowy element", instytutRepo, true),
-					new OknoElementuInstytut("Edytuj element", instytutRepo, false)));
+					new ElementWindowInstytut("Dodaj nowy element", instytutRepo, true),
+					new ElementWindowInstytut("Edytuj element", instytutRepo, false)));
 		});
 
 		buttonApp[13].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<DyrektorView, Dyrektor>("Dyrektorzy instytutów",
+			appListener(appWindow = new ApplicationWindow<DyrektorView, Dyrektor>("Dyrektorzy instytutów",
 					dyrektorViewRepo, dyrektorRepo, DyrektorView.class, Dyrektor.class,
-					new OknoElementuDyrektor("Dodaj nowy element", dyrektorRepo, true),
-					new OknoElementuDyrektor("Edytuj element", dyrektorRepo, false)));
+					new ElementWindowDyrektor("Dodaj nowy element", dyrektorRepo, true),
+					new ElementWindowDyrektor("Edytuj element", dyrektorRepo, false)));
 		});
 
 		buttonApp[14].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<PlanistaView, Planista>("Planiści", planistaViewRepo,
+			appListener(appWindow = new ApplicationWindow<PlanistaView, Planista>("Planiści", planistaViewRepo,
 					planistaRepo, PlanistaView.class, Planista.class,
-					new OknoElementuPlanista("Dodaj nowy element", planistaRepo, true),
-					new OknoElementuPlanista("Edytuj element", planistaRepo, false)));
+					new ElementWindowPlanista("Dodaj nowy element", planistaRepo, true),
+					new ElementWindowPlanista("Edytuj element", planistaRepo, false)));
 		});
 
 		buttonApp[15].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<AdministratorView, Administrator>("Administratorzy",
+			appListener(appWindow = new ApplicationWindow<AdministratorView, Administrator>("Administratorzy",
 					administratorViewRepo, administratorRepo, AdministratorView.class, Administrator.class,
-					new OknoElementuAdministrator("Dodaj nowy element", administratorRepo, true),
-					new OknoElementuAdministrator("Edytuj element", administratorRepo, false)));
+					new ElementWindowAdministrator("Dodaj nowy element", administratorRepo, true),
+					new ElementWindowAdministrator("Edytuj element", administratorRepo, false)));
 		});
 
 		buttonApp[16].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<BladView, Blad>("Błędy", bladViewRepo, bladRepo,
-					BladView.class, Blad.class, new OknoElementuBlad("Dodaj nowy element", bladRepo, true),
-					new OknoElementuBlad("Edytuj element", bladRepo, false)));
+			appListener(appWindow = new ApplicationWindow<BladView, Blad>("Błędy", bladViewRepo, bladRepo,
+					BladView.class, Blad.class, new ElementWindowBlad("Dodaj nowy element", bladRepo, true),
+					new ElementWindowBlad("Edytuj element", bladRepo, false)));
 		});
 
 		buttonApp[17].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<WydzialView, Wydzial>("Wydziały", wydzialViewRepo,
+			appListener(appWindow = new ApplicationWindow<WydzialView, Wydzial>("Wydziały", wydzialViewRepo,
 					wydzialRepo, WydzialView.class, Wydzial.class,
-					new OknoElementuWydzial("Dodaj nowy element", wydzialRepo, true),
-					new OknoElementuWydzial("Edytuj element", wydzialRepo, false)));
+					new ElementWindowWydzial("Dodaj nowy element", wydzialRepo, true),
+					new ElementWindowWydzial("Edytuj element", wydzialRepo, false)));
 		});
 
 		buttonApp[18].addClickListener(e -> {
-			appListener(appWindow = new OknoAplikacji<PrzedmiotView, Przedmiot>("Przedmioty", przedmiotViewRepo,
+			appListener(appWindow = new ApplicationWindow<PrzedmiotView, Przedmiot>("Przedmioty", przedmiotViewRepo,
 					przedmiotRepo, PrzedmiotView.class, Przedmiot.class,
-					new OknoElementuPrzedmiot("Dodaj nowy element", przedmiotRepo, true),
-					new OknoElementuPrzedmiot("Edytuj element", przedmiotRepo, false)));
+					new ElementWindowPrzedmiot("Dodaj nowy element", przedmiotRepo, true),
+					new ElementWindowPrzedmiot("Edytuj element", przedmiotRepo, false)));
 		});
 
 	}
 
-	private void appListener(OknoAplikacji window) {
+	private void appListener(ApplicationWindow window) {
 		
 		lockButtons();
 		

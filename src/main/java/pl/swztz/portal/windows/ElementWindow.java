@@ -5,7 +5,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public abstract class OknoElementu extends Window {
+public abstract class ElementWindow extends Window {
 	
 	protected JpaRepository repo;
 	private VerticalLayout layout = new VerticalLayout();
@@ -14,7 +14,7 @@ public abstract class OknoElementu extends Window {
 	protected Button okButton = new Button("OK");
 	protected Button cancelButton = new Button("Anuluj");
 	
-	public OknoElementu(String title, JpaRepository repo) {
+	public ElementWindow(String title, JpaRepository repo) {
 		super(title); // window title
 		this.repo = repo;
 	

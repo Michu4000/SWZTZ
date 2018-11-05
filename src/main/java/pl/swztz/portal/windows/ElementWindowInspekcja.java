@@ -16,7 +16,7 @@ import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-public class OknoElementuInspekcja extends OknoElementu {
+public class ElementWindowInspekcja extends ElementWindow {
 	
 	private Inspekcja obj;
 	private DateField date;
@@ -25,7 +25,7 @@ public class OknoElementuInspekcja extends OknoElementu {
 	private ComboBox<String[]> dyrektor;
 	private TextField textField;
 	
-	public OknoElementuInspekcja(String title, InspekcjaRepository repo, boolean windowType) {
+	public ElementWindowInspekcja(String title, InspekcjaRepository repo, boolean windowType) {
 		super(title, repo); // constructor of the base class
 		
 		// initialize elements of the form

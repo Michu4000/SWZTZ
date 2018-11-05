@@ -9,12 +9,12 @@ import com.vaadin.ui.Button.ClickListener;
 import pl.swztz.portal.models.Administrator;
 import pl.swztz.portal.repositories.AdministratorRepository;
 
-public class OknoElementuAdministrator extends OknoElementu {
+public class ElementWindowAdministrator extends ElementWindow {
 
 	private Administrator obj;
 	private TextField textField[];
 	
-	public OknoElementuAdministrator(String title, JpaRepository repo, boolean windowType) {
+	public ElementWindowAdministrator(String title, JpaRepository repo, boolean windowType) {
 		super(title, repo);
 		textField = new TextField[4];
 		textField[0] = new TextField("PESEL");

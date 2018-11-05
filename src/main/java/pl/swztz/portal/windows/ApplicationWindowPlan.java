@@ -15,13 +15,13 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-public class OknoPlan extends Window {
+public class ApplicationWindowPlan extends Window {
 
 	private ZajeciaViewRepository zajeciaRepo;
 	private MeetingDataProvider eventProvider = new MeetingDataProvider();
 	private VerticalLayout lay = new VerticalLayout();
 	
-	public OknoPlan(ZajeciaViewRepository zajeciaRepo) {
+	public ApplicationWindowPlan(ZajeciaViewRepository zajeciaRepo) {
 		super("Plan");
 		this.zajeciaRepo = zajeciaRepo;
 		

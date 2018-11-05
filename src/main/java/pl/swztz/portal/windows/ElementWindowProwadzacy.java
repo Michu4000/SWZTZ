@@ -9,12 +9,12 @@ import com.vaadin.ui.Button.ClickListener;
 import pl.swztz.portal.models.Prowadzacy;
 import pl.swztz.portal.repositories.ProwadzacyRepository;
 
-public class OknoElementuProwadzacy extends OknoElementu {
+public class ElementWindowProwadzacy extends ElementWindow {
 	
 	private Prowadzacy obj;
 	private TextField textField[];
 
-	public OknoElementuProwadzacy(String title, JpaRepository repo, boolean windowType) {
+	public ElementWindowProwadzacy(String title, JpaRepository repo, boolean windowType) {
 		super(title, repo);
 		
 		// initialize elements of the form

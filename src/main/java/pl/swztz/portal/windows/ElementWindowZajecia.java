@@ -14,7 +14,7 @@ import com.vaadin.ui.Button.ClickListener;
 import pl.swztz.portal.models.Zajecia;
 import pl.swztz.portal.repositories.ZajeciaRepository;
 
-public class OknoElementuZajecia extends OknoElementu {
+public class ElementWindowZajecia extends ElementWindow {
 
 	private Zajecia obj;
 	private TextField textField;
@@ -23,7 +23,7 @@ public class OknoElementuZajecia extends OknoElementu {
 	private ComboBox<String[]> sala, przedmiot, prowadzacy;
 	private ComboBoxMultiselect<String[]> grupy;
 	
-	public OknoElementuZajecia(String title, JpaRepository repo, boolean windowType) {
+	public ElementWindowZajecia(String title, JpaRepository repo, boolean windowType) {
 		super(title, repo);
 		
 		// initialize elements of the form

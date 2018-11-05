@@ -8,43 +8,42 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import pl.swztz.portal.models.Instytut;
-import pl.swztz.portal.repositories.InstytutRepository;
-import pl.swztz.portal.windows.OknoElementu;
+import pl.swztz.portal.models.Student;
+import pl.swztz.portal.repositories.StudentRepository;
 
-public class OknoElementuInstytut extends OknoElementu {
-
-	private Instytut obj;	
-	private ComboBox<String[]> wydzial;
-	private TextField nazwaInstytut;
+public class ElementWindowStudent extends ElementWindow {
 	
-	public OknoElementuInstytut(String title, InstytutRepository repo, boolean windowType) {
-		super(title, repo); // constructor of the base class
+	private Student obj;
+	private TextField textField[];
+	private ComboBox<String[]> grupy;
 
-		// initialize elements of the form
-		nazwaInstytut= new TextField("Nazwa Instytutu");
+	public ElementWindowStudent(String title, StudentRepository repo, boolean windowType) {
+		super(title, repo);
 		
-		// initialize combobox and get data
-		wydzial = new ComboBox<>("Wydział");
+		// initialize elements of the form
+		textField = new TextField[3];
+		textField[0] = new TextField("PESEL");
+		textField[1] = new TextField("Imię");
+		textField[2] = new TextField("Nazwisko");
+		
+		grupy = new ComboBox<>("Grupa");
 		List<String[]> stringArrayList = new ArrayList<>();
 
-		for(Object[] objectArray : repo.findWydzialy()) {
+		for(Object[] objectArray : repo.findGrupy()) {
 			stringArrayList.add(new String[] { ""+objectArray[0], (String) objectArray[1] });
 		}
 
-		wydzial.setItems(stringArrayList);
-		wydzial.setItemCaptionGenerator(x -> x[1]); // set displaying user name in combobox
-
-		form.addComponents(nazwaInstytut, wydzial); // add elements to form 
+		grupy.setItems(stringArrayList);
+		grupy.setItemCaptionGenerator(x -> x[1]); // set displaying institute name in combobox
 		
-		// depending on whether it's a add window or edit window
+		form.addComponents(textField[0], textField[1], textField[2], grupy);
+		
 		if(windowType)
 			addWindow();
 		else
 			editWindow();
 	}
 	
-	// only for add window
 	private void addWindow() {
 		okButton.setCaption("Dodaj");
 		
@@ -52,7 +51,7 @@ public class OknoElementuInstytut extends OknoElementu {
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!nazwaInstytut.isEmpty() && !wydzial.isEmpty()) {
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !grupy.isEmpty()) {
 					addNew();
 					close();
 				}
@@ -68,34 +67,33 @@ public class OknoElementuInstytut extends OknoElementu {
 	}
 	
 	private void addNew() {
-		Long idWydzial = Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]);
-		Instytut newObj = new Instytut(nazwaInstytut.getValue(), idWydzial);
+		Long idGrupy = Long.parseLong(grupy.getSelectedItem().orElse(null)[0]);
+		Student newObj = new Student(Long.valueOf(textField[0].getValue()), textField[1].getValue(), textField[2].getValue(), idGrupy);
 		repo.save(newObj);
 		clearForm();
 	}
 	
 	private void clearForm() {
-		nazwaInstytut.clear();
-		wydzial.clear();
+		for (TextField tf : textField)
+			tf.clear();
+		grupy.clear();
 	}
 	
-	// only for edit window
 	private void editWindow() {
 		okButton.setCaption("Wprowadź zmiany");
 	}
-	
-	// for edit window: set id for edited entry
+
 	@Override
 	public void setElement(Long id) {
-		obj = ((InstytutRepository)repo).findByIdInstytut(id);
+		obj = ((StudentRepository) repo).findByIdStudent(id);
 		loadToForm();
 		
 		// set listener for apply changes button
 		okButton.addClickListener(new ClickListener() {
 			@Override
 			public void buttonClick(ClickEvent event) {
-				if(!wydzial.isEmpty() &&   !nazwaInstytut.isEmpty()) {
-					updateObiekt(); 
+				if(!textField[0].isEmpty() && !textField[1].isEmpty() && !textField[2].isEmpty() && !grupy.isEmpty()) {
+					updateobj(); 
 					close();
 				}
 				else {
@@ -108,20 +106,21 @@ public class OknoElementuInstytut extends OknoElementu {
 		});
 	}
 	
-	// for edit window: get data to form
 	private void loadToForm() {
-		Object[] objectArray = ((InstytutRepository)repo).findWydzial(obj.getIdWydzial()).get(0);
+		Object[] objectArray = ((StudentRepository)repo).findGrupa(obj.getIdGrupa()).get(0);
 		String[] objString = new String[] { ""+objectArray[0], (String)objectArray[1] };
 		
-		nazwaInstytut.setValue(obj.getNazwaInstytut());
-		wydzial.setSelectedItem(objString);
+		textField[0].setValue(String.valueOf(obj.getPESEL()));
+		textField[1].setValue(obj.getImie());
+		textField[2].setValue(obj.getNazwisko());
+		grupy.setSelectedItem(objString);
 	}
-	
-	// for edit window: update entry in database
-	private void updateObiekt() {
-		obj.setNazwaInstytut(nazwaInstytut.getValue());
-		obj.setIdWydzial(Long.parseLong(wydzial.getSelectedItem().orElse(null)[0]));
-		
+
+	private void updateobj() {
+		obj.setPESEL(Long.valueOf(textField[0].getValue()));
+		obj.setImie(textField[1].getValue());
+		obj.setNazwisko(textField[2].getValue());
+		obj.setIdGrupa(Long.parseLong(grupy.getSelectedItem().orElse(null)[0]));
 		repo.save(obj);
 	}
 }

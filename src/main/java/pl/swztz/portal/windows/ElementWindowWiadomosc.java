@@ -11,7 +11,7 @@ import com.vaadin.ui.Button.ClickListener;
 import pl.swztz.portal.models.Wiadomosc;
 import pl.swztz.portal.repositories.WiadomoscRepository;
 
-public class OknoElementuWiadomosc extends OknoElementu {
+public class ElementWindowWiadomosc extends ElementWindow {
 
 	private Wiadomosc obj;
 	private TextField textField[];
@@ -20,7 +20,7 @@ public class OknoElementuWiadomosc extends OknoElementu {
 	private ComboBox<String[]> recipient;
 	private DateTimeField date;
 	
-	public OknoElementuWiadomosc(String title, WiadomoscRepository repo, boolean windowType) {
+	public ElementWindowWiadomosc(String title, WiadomoscRepository repo, boolean windowType) {
 		super(title, repo); // constructor of the base class
 		
 		// initialize elements of the form
